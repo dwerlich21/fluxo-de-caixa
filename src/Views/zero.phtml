@@ -1,0 +1,237 @@
+<div class="page-body">
+	<div class="container-fluid">
+		<div class="col-xl-12">
+			<div class="card">
+				<div class="card-header pb-0">
+					<form id="filter" autocomplete="off" class="form-group">
+						<div class="row">
+							<div class="col-md-5 d-sm-flex">
+								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#" onclick="openModal(0)" style="min-width: 180px"><i
+										class="fa fa-plus"></i> Equipamento</a>
+								<select id="gesFilter" name="ges" class="form-select form-control my-1">
+									<?php foreach ($offices as $office): ?>
+										<option value="<?= $office->getId() ?>"><?= $office->getName() ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<div class="col-md-3 mt-auto">
+								<select id="equipamentFilter" name="equipament" class="form-select form-control my-1">
+									<?php foreach ($equipaments as $equipament): ?>
+										<option value="<?= $equipament->getId() ?>"><?= $equipament->getName() ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<div class="col-md-4 text-end d-sm-flex">
+								<button class="btn btn-danger my-1" type="reset" onclick="resetTable()">Limpar
+								</button>
+								<button class="btn btn-primary my-1 m-l-10" type="submit">Buscar</button>
+							</div>
+						</div>
+					</form>
+					<hr>
+				</div>
+				<div class="card-body">
+					<div class="row g-3 align-items-center m-b-30">
+						<div class="col-auto">
+							<span>Exibir </span>
+						</div>
+						<div class="col-auto">
+							<select class="form-control form-select"
+							        onchange="getLimit(this.value, 'equipamentTableBody')">
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+							</select>
+						</div>
+						<div class="col-auto">
+							<span> registros</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<p>Exibindo de <span id="startEquipament"></span> a <span id="endEquipament"></span> de <span
+									id="totalEquipament"></span> registros</p>
+						</div>
+					</div>
+					<div class="row table-responsive-xxl">
+						<div class="col">
+							<table class="table table-hover table-sm" id="table">
+								<thead>
+								<tr>
+									<th>Inventário</th>
+									<th class="text-center">Responsável</th>
+									<th class="text-center">Ações</th>
+								</tr>
+								</thead>
+								<tbody id="tableBody"></tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-center">
+							<div class="spinner-border loaderTable" role="status">
+								<span class="sr-only mx-auto">Loading...</span>
+							</div>
+						</div>
+					</div>
+					<div class="row text-end">
+						<nav aria-label="...">
+							<ul class="pagination justify-content-end pagination-primary"
+							    id="pagination" style="top: auto">
+
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="<?= BASEURL ?>assets/functions/riskInventory.js?v=<?= time() ?>"></script>() ?>"></script>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<title>AEP - JPP</title>
+</head>
+<body>
+<table class="table table-bordered" width="100%" cellspacing="0" id='tableRiskInventory'>
+	<thead>
+	<tr class="middle">
+		<th class='text-center upper' colspan='9'>Identificação de Perigos</th>
+		<th class='text-center upper' colspan='7'>Análise Preliminar/Monitoramento das Exposições</th>
+		<th class='text-center upper' colspan='3'>Avaliação de Riscos</th>
+	</tr>
+	<tr class="middle">
+		<th class="text-center ">Item</th>
+		<th class="text-center ">Perigo / Fator de Risco</th>
+		<th class="text-center">Processo</th>
+		<th class="text-center">Ambiente</th>
+		<th class="text-center">Fontes ou Cirscunstâncias</th>
+		<th class="text-center">Duração / Frequência</th>
+		<th class="text-center">Possíveis lesões, Agravos ou Danos a Saúde</th>
+		<th class="text-center">Grupo de Trabalhadores Sujeitos ao Risco (GES)</th>
+		<th class="text-center">Medidas de Prevenção Implementadas</th>
+		<th class="text-center">Riscos</th>
+		<th class="text-center">Intens. / Concent.</th>
+		<th class="text-center">Legis. Alplicável</th>
+		<th class="text-center">Critério Avaliativo adotado</th>
+		<th class="text-center">Ferram. ou Técnica</th>
+		<th class="text-center">LT / LEO</th>
+		<th class="text-center">Nível de Ação</th>
+		<th class="text-center" style='width: 3%' text-rotate="90">Probabilidade</th>
+		<th class="text-center" style='width: 3%' text-rotate="90">Severidade</th>
+		<th class="text-center" style='width: 5%'>Class. de Risco</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="middle">
+		<td class="text-center">1</td>
+		<td class="text-center">Cognitivo</td>
+		<td class="text-center">Processo 2</td>
+		<td class="text-center">Sala de musculação</td>
+		<td class="text-center">Fontes</td>
+		<td class="text-center">1</td>
+		<td class="text-center">Alterações no estado emocional, fadiga física e mental, estresse, ansiedade, alteração do sono, distúrbios gástricos, taquicardia, diabetes,  hipertensão arterial</td>
+		<td class="text-center">Personal;<br></td>
+		<td class="text-center">Prevenção</td>
+		<td class="text-center">Situações de sobrecarga de trabalho mental</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NR 17</td>
+		<td class="text-center">Semiquantitativo</td>
+		<td class="text-center">NASA TLX</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">2</td>
+		<td class="text-center">1 x 2 = 2</td>
+		<td class="text-center" style='background: #92D050; color: black'>4 - Baixa</td>
+	</tr>
+	<tr class="middle">
+		<td class="text-center">2</td>
+		<td class="text-center">Psicossociais</td>
+		<td class="text-center">Processo 2</td>
+		<td class="text-center">Recepção</td>
+		<td class="text-center">Circunstância</td>
+		<td class="text-center">6</td>
+		<td class="text-center">Transtorno psicológico, perda de foco, dificuldades de aprendizagem e incapacidade de tomar decisões</td>
+		<td class="text-center">Recepcionista;<br></td>
+		<td class="text-center">Prevenção 3</td>
+		<td class="text-center">Trabalho em condições de difícil comunicação</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NR 17</td>
+		<td class="text-center">Semiquantitativo</td>
+		<td class="text-center">JSS</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">1</td>
+		<td class="text-center">1 x 1 = 1</td>
+		<td class="text-center" style='background: #00B050; color: black'>1 - Trivial</td>
+	</tr>
+	<tr class="middle">
+		<td class="text-center">3</td>
+		<td class="text-center">Postura estática no trabalho</td>
+		<td class="text-center">Processo 2</td>
+		<td class="text-center">Recepção</td>
+		<td class="text-center">Circunstância perigo 4</td>
+		<td class="text-center">2</td>
+		<td class="text-center">Sobrecarga, fadigas musculares e o aparecimento de lesões geralmente da coluna e membros superiores</td>
+		<td class="text-center">Recepcionista;<br></td>
+		<td class="text-center">Prevenção perigo 4</td>
+		<td class="text-center">Trabalho em posturas incômodas ou pouco confortáveis por longos períodos</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NR 17</td>
+		<td class="text-center">Semiquantitativo</td>
+		<td class="text-center">ISO/TR 12295: 2014</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">1</td>
+		<td class="text-center">2 x 1 = 2</td>
+		<td class="text-center" style='background: #92D050; color: black'>2 - Baixa</td>
+	</tr>
+	<tr class="middle">
+		<td class="text-center">4</td>
+		<td class="text-center">Levantamento, Transporte e descarga individual de cargas</td>
+		<td class="text-center">Teste de Processo 1</td>
+		<td class="text-center">Sala de musculação</td>
+		<td class="text-center">Fonte 5</td>
+		<td class="text-center">4</td>
+		<td class="text-center">Sobrecarga, fadigas musculares e o aparecimento de lesões geralmente do tronco e dos membros inferiores</td>
+		<td class="text-center">Personal;<br>Professor;<br>Recepcionista;<br></td>
+		<td class="text-center">Prevenção 5</td>
+		<td class="text-center">Levantamento e transporte manual de cargas ou volumes</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NR 17</td>
+		<td class="text-center">Semiquantitativo</td>
+		<td class="text-center">ISO/TR 12295: 2014</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">1</td>
+		<td class="text-center">3 x 4 = 12</td>
+		<td class="text-center" style='background: #FFC000; color: black'>12 - Alta</td>
+	</tr>
+	<tr class="middle">
+		<td class="text-center">5</td>
+		<td class="text-center">Movimentação de cargas leve em alta frequência de repetição</td>
+		<td class="text-center">Erro </td>
+		<td class="text-center">Recepção</td>
+		<td class="text-center">Fonte 07</td>
+		<td class="text-center">5</td>
+		<td class="text-center">Sobrecarga, fadigas musculares e o aparecimento de lesões geralmente das extremidades dos membros inferiores</td>
+		<td class="text-center">Personal;<br>Professor;<br>Recepcionista;<br></td>
+		<td class="text-center">Prevenção 07</td>
+		<td class="text-center">Frequente execução de movimentos repetitivos</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NR 17</td>
+		<td class="text-center">Semiquantitativo</td>
+		<td class="text-center">ISO/TR 12295: 2014</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">NA</td>
+		<td class="text-center">1</td>
+		<td class="text-center">3 x 4 = 12</td>
+		<td class="text-center" style='background: #FFC000; color: black'>12 - Alta</td>
+	</tr></table></body>

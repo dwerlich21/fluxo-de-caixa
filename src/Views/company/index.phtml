@@ -1,0 +1,1406 @@
+<div class="page-body">
+	<!-- Container-fluid starts-->
+	<div class="container-fluid m-t-20">
+		<div class="row mt-2">
+			<div class="col-sm-12">
+				<div class="card p-3">
+					<div class="card-body">
+						<div class="tabbed-card">
+							<ul class="pull-right nav nav-pills nav-secondary" id="pills-clrtabsuccess"
+							    role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" data-bs-toggle="pill" href="#companyTab" role="tab"
+									   aria-controls="pills-clrhome" aria-selected="true">
+										<i class="icofont icofont-ui-home"></i>Identificação
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-bs-toggle="pill" href="#process" role="tab"
+									   aria-controls="pills-clrcontact" aria-selected="false">
+										<i class="icofont icofont-gears"></i>Processos
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-bs-toggle="pill" href="#room" role="tab"
+									   aria-controls="pills-clrprofile" aria-selected="false">
+										<i class="icofont icofont-company"></i>Ambientes
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-bs-toggle="pill" href="#offices" role="tab"
+									   aria-controls="pills-clrcontact" aria-selected="false">
+										<i class="icofont icofont-contacts"></i>Cargos
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-bs-toggle="pill" href="#professionals" role="tab"
+									   aria-controls="pills-clrcontact" aria-selected="false">
+										<i class="icofont icofont-man-in-glasses"></i>Empregados
+									</a>
+								</li>
+							</ul>
+							<div class="tab-content mt-4">
+
+								<div class="tab-pane p-3 active" id="companyTab">
+									<div class="row mt-3">
+										<div class="col text-center">
+											<div class="spinner-border loaderTop" style="width: 5rem; height: 5rem;"
+											     role="status">
+												<span class="sr-only mx-auto">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<form class="form-group" id="addCompany" method="post" autocomplete="off">
+										<input type="hidden" name="companyId" id="companyId"
+										       value="<?= $companySelected ? $companySelected->getId() : '' ?>">
+										<div class="row">
+											<div class="col">
+												<span style="text-transform: uppercase" "><b>Informações da
+													Empresa</b></span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<label for="cnpj">CNPJ</label>
+												<input id="cnpj" name="cnpj" class="form-control" type="text"
+												       placeholder="CNPJ" data-mask="99.999.999/9999-99"
+												       value="<?= $companySelected ? $companySelected->getCnpj() : '' ?>">
+											</div>
+											<div class="col-sm-8">
+												<label for="socialReason">Nome Fantasia</label>
+												<input id="socialReason" name="socialReason" class="form-control"
+												       type="text" placeholder="Nome Fantasia"
+												       value="<?= $companySelected ? $companySelected->getSocialReason() : '' ?>">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-10">
+												<label for="nameEdit">Razão Social</label>
+												<input id="nameEdit" name="name" class="form-control" type="text"
+												       placeholder="Razão Social" readonly
+												       value="<?= $companySelected ? $companySelected->getName() : '' ?>">
+											</div>
+											<div class="col-md-2">
+												<label for="postage">Porte</label>
+												<input id="postage" name="postage" class="form-control" type="text"
+												       placeholder="Porte" readonly
+												       value="<?= $companySelected ? $companySelected->getPostage() : '' ?>">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3">
+												<label for="cnae">CNAE Principal</label>
+												<input id="cnae" name="cnae" class="form-control" type="text"
+												       placeholder="CNAE Principal"
+												       data-mask="99.99-9/99" readonly
+												       value="<?= $companySelected->getCnae() ? $companySelected->getCnae()->getCnae() : '' ?>">
+											</div>
+											<div class="col-sm-7">
+												<label for="cnaeDescription">Atividade Principal</label>
+												<input id="cnaeDescription" name="cnaeDescription" class="form-control"
+												       type="text"
+												       placeholder="CNAE Principal" readonly
+												       value="<?= $companySelected->getCnae() ? $companySelected->getCnae()->getDescription() : '' ?>">
+											</div>
+											<div class="col-sm-2">
+												<label for="grauDeRisco">Grau de Risco</label>
+												<input id="grauDeRisco" class="form-control" type="text"
+												       readonly
+												       value="<?= $companySelected->getCnae() ? $companySelected->getCnae()->getRiskCnae() : '' ?>">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<label for="">Atividades Secundárias</label><br>
+												<?php if ($cnaeSecondary): ?>
+													<?php foreach ($cnaeSecondary as $item): ?>
+														<?= \App\Helpers\Utils::mask($item->getCnae()->getCnae(), '##.##-#/##') ?> - <?= $item->getCnae()->getDescription() ?>.
+														<br>
+														<input name="cnaeSecondary[]" type="hidden"
+														       value="<?= $item->getCnae()->getCnae() ?>">
+													<?php endforeach; ?>
+												<?php else: ?>
+													Não informado
+													<input name="cnaeSecondary[]" type="hidden">
+												<?php endif; ?>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3">
+												<div class="form-group">
+													<label for="zipCode">CEP</label>
+													<input class="form-control" name="zipCode" type="text" id="zipCode"
+													       placeholder="Cep" readonly
+													       value="<?= $companySelected ? $companySelected->getZipCode() : '' ?>">
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label for="state">Estado</label>
+													<input type="text" name="state" id="state" class="form-control"
+													       placeholder="UF"
+													       value="<?= $companySelected ? $companySelected->getState() : '' ?>"
+													       readonly>
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="form-group">
+													<label for="city">Cidade</label>
+													<input type="text" name="city" id="city" class="form-control"
+													       placeholder="Cidade"
+													       value="<?= $companySelected ? $companySelected->getCity() : '' ?>"
+													       readonly>
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label for="neighborhood">Bairro</label>
+													<input type="text" name="neighborhood" id="neighborhood"
+													       class="form-control"
+													       placeholder="Bairro" readonly
+													       value="<?= $companySelected ? $companySelected->getNeighborhood() : '' ?>">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label for="address">Logradouro</label>
+													<input type="text" name="address" id="address" class="form-control"
+													       placeholder="Endereço" readonly
+													       value="<?= $companySelected ? $companySelected->getAddress() : '' ?>">
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label for="number">Número</label>
+													<input type="text" name="number" id="number" class="form-control"
+													       placeholder="Número" readonly
+													       value="<?= $companySelected ? $companySelected->getNumber() : '' ?>">
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label for="complement">Complemento</label>
+													<input type="text" name="complement" id="complement"
+													       class="form-control"
+													       placeholder="Complemento" readonly
+													       value="<?= $companySelected ? $companySelected->getComplement() : '' ?>">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3">
+												<label for="numbersOfWorkers">Qtd Trabalhadores</label>
+												<input id="numbersOfWorkers" name="numbersOfWorkers"
+												       class="form-control"
+												       type="number"
+												       placeholder="Qtd Trabalhadores"
+												       value="<?= $companySelected ? $companySelected->getNumbersOfWorkers() : '' ?>">
+											</div>
+											<div class="col-md-3">
+												<label for="phone">Telefone</label>
+												<input id="phone" name="phone" class="form-control" type="text"
+												       placeholder="(99) 9999-9999" onkeyup="maskPhone(this, 'phone')"
+												       value="<?= $companySelected->getPhone() ? $companySelected->getPhone() : '' ?>">
+											</div>
+											<div class="col-md-6">
+												<label for="email">E-mail</label>
+												<input id="email" name="email" class="form-control" type="email"
+												       placeholder="E-mail"
+												       value="<?= $companySelected->getEmail() ? $companySelected->getEmail() : '' ?>">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-3 mt-1">
+												<label>Logo da Empresa</label><br>
+												<span class="fileselector">
+                                                    <label class="btn btn-block btn-danger text-white"
+                                                           style="margin-top: 5px"
+                                                           for="logoCompany">
+                                                          <input class="upload-file-selector" id="logoCompany"
+                                                                 type="file"
+                                                                 name="logoCompany">
+                                                          <i class="fa fa-paperclip margin-correction"></i>
+                                                              <span id="logoCompanyLabel"
+                                                                    default="Anexar Arquivo">Anexar Arquivo</span>
+                                                      </label>
+                                                </span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<hr style="background-color: #002060">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<span style="text-transform: uppercase"><b>Composição SESMT</b></span>
+												<p><?= $sesmt ? $sesmt->getProfessionals() : '' ?></p>
+											</div>
+											<div class="col-md-6">
+												<span style="text-transform: uppercase"><b>Composição CIPA</b></span>
+												<p><?= $cipa ? $cipa->getProfessionals() : '' ?></p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<hr style="background-color: #002060">
+												<span
+													style="text-transform: uppercase"><b>Informações do Responsável</b></span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-8">
+												<label for="representative">Representante Legal</label>
+												<input name="representative" id="representative" class="form-control"
+												       type="text"
+												       placeholder="Representante Legal"
+												       value="<?= $companySelected ? $companySelected->getRepresentative() : '' ?>">
+											</div>
+											<div class="col-sm-4">
+												<label for="representativePosition">Cargo Representante Legal</label>
+												<select name="representativePosition" id="representativePosition"
+												        class="form-control form-select">
+													<option value="">Selecionar</option>
+													<option
+														value="1" <?= $companySelected && $companySelected->getrepresentativePosition() == 1 ? 'selected' : '' ?>>
+														Proprietário
+													</option>
+													<option
+														value="2" <?= $companySelected && $companySelected->getrepresentativePosition() == 2 ? 'selected' : '' ?>>
+														Presidente
+													</option>
+													<option
+														value="3" <?= $companySelected && $companySelected->getrepresentativePosition() == 3 ? 'selected' : '' ?>>
+														Diretor Executivo
+													</option>
+													<option
+														value="4" <?= $companySelected && $companySelected->getrepresentativePosition() == 4 ? 'selected' : '' ?>>
+														Diretor Geral
+													</option>
+													<option
+														value="5" <?= $companySelected && $companySelected->getrepresentativePosition() == 5 ? 'selected' : '' ?>>
+														Chief Executive Officer - CEO
+													</option>
+													<option
+														value="6" <?= $companySelected && $companySelected->getrepresentativePosition() == 6 ? 'selected' : '' ?>>
+														Gerente Geral
+													</option>
+													<option
+														value="7" <?= $companySelected && $companySelected->getrepresentativePosition() == 7 ? 'selected' : '' ?>>
+														Preposto
+													</option>
+												</select>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<hr style="background-color: #002060">
+												<h6 class="title" style="color: black">Observações</h6>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+                                <textarea id="obs" name="obs" rows="5"
+                                          class="w-100"><?= $companySelected ? $companySelected->getObs() : '' ?></textarea>
+											</div>
+										</div>
+										<div class="row mt-3">
+											<div class="col text-end">
+												<button type="submit" class="btn btn-primary">Salvar Empresa</button>
+											</div>
+										</div>
+									</form>
+								</div>
+
+								<div class="tab-pane p-3" id="room">
+									<form id="filterRoom" autocomplete="off" class="form-group m-t-20">
+										<div class="row">
+											<div class="col-md-8 d-sm-flex">
+												<a class="btn btn-primary text-white w-150 height-35 m-r-30 my-1"
+												   href="#"
+												   onclick="openModalRoom(0)">
+													<span><i class="fa fa-plus"></i> Ambiente</span>
+												</a>
+												<input class="form-control my-1" id="nameFilterRoom" name="name"
+												       type="text" placeholder="Nome">
+											</div>
+											<div class="col-md-4 text-end d-sm-flex">
+												<button class="btn btn-danger my-1" type="reset"
+												        onclick="resetTableRoom()">
+													Limpar
+												</button>
+												<button class="btn btn-primary my-1 m-l-10" type="submit">Buscar
+												</button>
+											</div>
+										</div>
+									</form>
+										<hr>
+									<div class="row g-3 align-items-center m-b-30">
+										<div class="col-auto">
+											<span>Exibir </span>
+										</div>
+										<div class="col-auto">
+											<select class="form-control form-select"
+											        onchange="getLimitRoom(this.value, 'roomTableBody')">
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select>
+										</div>
+										<div class="col-auto">
+											<span> registros</span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col">
+											<p>Exibindo de <span id="startEnvironment"></span> a <span id="endEnvironment"></span> de <span
+													id="totalEnvironment"></span> registros</p>
+										</div>
+									</div>
+									<div class="row table-responsive-lg">
+										<div class="col">
+											<table class="table table-hover table-sm" id="roomTable">
+												<thead>
+												<tr>
+													<th>Ambiente
+														<i class="fa fa-sort-alpha-down ml-2 pointer" id="iconNameAsc"
+														   onclick="newOrderEnvironment('name', 'asc', 'iconNameAsc', 'iconNameDesc')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer" id="iconNameDesc"
+														   onclick="newOrderEnvironment('name', 'desc', 'iconNameDesc', 'iconNameAsc')"
+														   style="display:none;"></i>
+													</th>
+													<th class="text-center">Área
+														<i class="fa fa-sort-numeric-down ml-2 pointer" id="iconAreaAsc"
+														   onclick="newOrderEnvironment('area', 'asc', 'iconAreaAsc', 'iconAreaDesc')"></i>
+														<i class="fa fa-sort-numeric-up ml-2 pointer" id="iconAreaDesc"
+														   onclick="newOrderEnvironment('area', 'desc', 'iconAreaDesc', 'iconAreaAsc')"
+														   style="display:none;"></i>
+													</th>
+													<th class="text-center">Estabelecimento
+														<i class="fa fa-sort-alpha-down ml-2 pointer" id="iconEstablishmentAsc"
+														   onclick="newOrderEnvironment('establishment', 'desc', 'iconEstablishmentAsc', 'iconEstablishmentDesc')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer" id="iconEstablishmentDesc"
+														   onclick="newOrderEnvironment('establishment', 'asc', 'iconEstablishmentDesc', 'iconEstablishmentAsc')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Status
+														<i class="fa fa-sort-alpha-down ml-2 pointer" id="iconActiveAsc"
+														   onclick="newOrderEnvironment('active', 'desc', 'iconActiveAsc', 'iconActiveDesc')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer" id="iconActiveDesc"
+														   onclick="newOrderEnvironment('active', 'asc', 'iconActiveDesc', 'iconActiveAsc')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Ações</th>
+												</tr>
+												</thead>
+												<tbody id="roomTableBody"></tbody>
+											</table>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col text-center">
+											<div class="spinner-border loaderTable" role="status">
+												<span class="sr-only mx-auto">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<div class="row text-end">
+										<nav aria-label="...">
+											<ul class="pagination justify-content-end pagination-primary"
+											    id="paginationProcess" style="top: auto">
+
+											</ul>
+										</nav>
+									</div>
+								</div>
+
+								<div class="tab-pane p-3" id="professionals">
+
+									<form id="filterProfessionals" class="form-group m-t-20" autocomplete="off">
+										<div class="row">
+											<div class="col-md-8 d-sm-flex">
+												<a class="btn btn-primary text-white height-35 my-1 m-r-30" href="#"
+												   onclick="openModalProfessionals()" style="min-width: 170px"><i
+														class="fa fa-plus"></i> Empregado</a>
+												<input class="form-control my-1" id="nameFilter" name="name" type="text"
+												       placeholder="Nome">
+											</div>
+											<div class="col-md-4 text-end d-sm-flex">
+												<button class="btn btn-danger my-1" type="reset"
+												        onclick="resetTableProfessionals()">
+													Limpar
+												</button>
+												<button class="btn btn-primary my-1 m-l-10" type="submit">Buscar
+												</button>
+											</div>
+										</div>
+									</form>
+									<div class="row mt-2">
+										<hr>
+										<div class="col">
+											<span style="text-transform: uppercase"><b>Importar Empregados</b></span>
+										</div>
+									</div>
+									<form id="formFile" class=" form-group">
+										<div class="row">
+											<div class="col-md-6 mt-1">
+												<div class="row">
+													<div class="col">
+                                                <span class="fileselector">
+                                            <label class="btn btn-block btn-danger text-white" style="margin-top: 5px"
+                                                   for="logoCompany">
+                                                  <input class="upload-file-selector" id="importProfessional"
+                                                         type="file"
+                                                         name="importProfessional">
+                                                  <i class="fa fa-paperclip margin-correction"></i>
+                                                      <span id="importProfessionalLabel"
+                                                            default="Anexar Arquivo">Anexar Arquivo</span>
+                                              </label>
+                                        </span>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div class="col-md-3">
+															<button type="submit" class="btn btn-primary text-white"
+															        id="button" style="display: none">Importar
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-5 text-justify">
+												<p>Faça o Download do Arquivo MODELO de Tabela de Empregados. ATENÇÃO:
+													Os Ambientes e
+													Cargos devem ter escrita idêntica aos já cadastrados no sistema.</p>
+											</div>
+											<div class="col-md-1 text-success my-auto">
+												<a href="<?= BASEURL ?>assets/empregados.csv" style="color: #28a745">
+													<i class="fa fa-3x fa-file-excel-o"></i>
+												</a>
+											</div>
+										</div>
+									</form>
+									<div class="row g-3 align-items-center m-b-30">
+										<div class="col-auto">
+											<span>Exibir </span>
+										</div>
+										<div class="col-auto">
+											<select class="form-control form-select"
+											        onchange="getLimitProfessional(this.value, 'professionalsTableBody')">
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select>
+										</div>
+										<div class="col-auto">
+											<span> registros</span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col">
+											<p>Exibindo de <span id="startProfessional"></span> a <span id="endProfessional"></span> de <span
+													id="totalProfessional"></span> registros</p>
+										</div>
+									</div>
+									<div class="row table-responsive-lg">
+										<div class="col">
+											<table class="table table-hover table-sm" id="professionalsTable">
+												<thead>
+												<tr>
+													<th style="width: 30%;">Nome
+														<i class="fa fa-sort-alpha-down ml-2 pointer"
+														   id="iconNameAscProfessional"
+														   onclick="newOrderProfessional('name', 'asc', 'iconNameAscProfessional', 'iconNameDescProfessional')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer"
+														   id="iconNameDescProfessional"
+														   onclick="newOrderProfessional('name', 'desc', 'iconNameDescProfessional', 'iconNameAscProfessional')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Cargo
+														<i class="fa fa-sort-alpha-down ml-2 pointer"
+														   id="iconOfficeAscProfessional"
+														   onclick="newOrderProfessional('office', 'asc', 'iconOfficeAscProfessional', 'iconOfficeDescProfessional')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer"
+														   id="iconOfficeDescProfessional"
+														   onclick="newOrderProfessional('office', 'desc', 'iconOfficeDescProfessional', 'iconOfficeAscProfessional')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Formação
+														<i class="fa fa-sort-alpha-down ml-2 pointer"
+														   id="iconFormationAscProfessional"
+														   onclick="newOrderProfessional('formation', 'asc', 'iconFormationAscProfessional', 'iconFormationDescProfessional')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer"
+														   id="iconFormationDescProfessional"
+														   onclick="newOrderProfessional('formation', 'desc', 'iconFormationDescProfessional', 'iconFormationAscProfessional')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Admissão
+														<i class="fa fa-sort-numeric-down ml-2 pointer"
+														   id="iconAdmissionOrderAscProfessional"
+														   onclick="newOrderProfessional('admissionOrder', 'asc', 'iconAdmissionOrderAscProfessional', 'iconAdmissionOrderDescProfessional')"></i>
+														<i class="fa fa-sort-numeric-up ml-2 pointer"
+														   id="iconAdmissionOrderDescProfessional"
+														   onclick="newOrderProfessional('admissionOrder', 'desc', 'iconAdmissionOrderDescProfessional', 'iconAdmissionOrderAscProfessional')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Ações</th>
+												</tr>
+												</thead>
+												<tbody id="professionalsTableBody"></tbody>
+											</table>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col text-center">
+											<div class="spinner-border loaderTable" role="status">
+												<span class="sr-only mx-auto">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<div class="row text-end">
+										<nav aria-label="...">
+											<ul class="pagination justify-content-end pagination-primary"
+											    id="paginationProfessional" style="top: auto">
+
+											</ul>
+										</nav>
+									</div>
+								</div>
+
+								<div class="tab-pane p-3" id="offices">
+
+									<form id="filterOffice" class="form-group m-t-20" autocomplete="off">
+										<div class="row">
+											<div class="col-md-5 d-sm-flex">
+												<a class="btn btn-primary text-white w-150 height-35 m-r-30 my-1"
+												   href="#" onclick="openModalOffice()">
+													<i class="fa fa-plus"></i> Cargo</a>
+												<input class="form-control my-1" id="nameFilterOffice" name="name"
+												       type="text" placeholder="Nome">
+											</div>
+											<div class="col-md-3 mt-auto">
+												<input name="occupation" id="occupationFilterOffice"
+												       class="form-control my-1" placeholder="Função">
+											</div>
+											<div class="col-md-4 text-end d-sm-flex">
+												<button class="btn btn-danger  my-1" type="reset"
+												        onclick="resetTableOffice()">Limpar
+												</button>
+												<button class="btn btn-primary  my-1 m-l-10" type="submit">Buscar
+												</button>
+											</div>
+										</div>
+									</form>
+										<hr>
+									<div class="row g-3 align-items-center m-b-30">
+										<div class="col-auto">
+											<span>Exibir </span>
+										</div>
+										<div class="col-auto">
+											<select class="form-control form-select"
+											        onchange="getLimitOffice(this.value, 'officeTableBody')">
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select>
+										</div>
+										<div class="col-auto">
+											<span> registros</span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col">
+											<p>Exibindo de <span id="startOffice"></span> a <span id="endOffice"></span> de <span
+													id="totalOffice"></span> registros</p>
+										</div>
+									</div>
+									<div class="row table-responsive-lg">
+										<div class="col">
+											<table class="table table-hover table-sm" id="officeTable">
+												<thead>
+												<tr>
+													<th style="width: 30%;">Cargo
+														<i class="fa fa-sort-alpha-down ml-2 pointer" id="iconNameAscOffice"
+														   onclick="newOrderOffice('name', 'asc', 'iconNameAscOffice', 'iconNameDescOffice')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer" id="iconNameDescOffice"
+														   onclick="newOrderOffice('name', 'desc', 'iconNameDescOffice', 'iconNameAscOffice')"
+														   style="display:none;"></i></th>
+													<th class="text-center">CBO
+														<i class="fa fa-sort-alpha-down ml-2 pointer" id="iconOccupationNameAsc"
+														   onclick="newOrderOffice('occupationName', 'asc', 'iconOccupationNameAsc', 'iconOccupationNameDesc')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer" id="iconOccupationNameDesc"
+														   onclick="newOrderOffice('occupationName', 'desc', 'iconOccupationNameDesc', 'iconOccupationNameAsc')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Status
+														<i class="fa fa-sort-alpha-down ml-2 pointer" id="iconActiveAscOffice"
+														   onclick="newOrderOffice('active', 'desc', 'iconActiveAscOffice', 'iconActiveDescOffice')"></i>
+														<i class="fa fa-sort-alpha-up ml-2 pointer" id="iconActiveDescOffice"
+														   onclick="newOrderOffice('active', 'asc', 'iconActiveDescOffice', 'iconActiveAscOffice')"
+														   style="display:none;"></i></th>
+													<th class="text-center">Ações</th>
+												</tr>
+												</thead>
+												<tbody id="officeTableBody"></tbody>
+											</table>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col text-center">
+											<div class="spinner-border loaderTable" role="status">
+												<span class="sr-only mx-auto">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<div class="row text-end">
+										<nav aria-label="...">
+											<ul class="pagination justify-content-end pagination-primary"
+											    id="paginationOffice" style="top: auto">
+
+											</ul>
+										</nav>
+									</div>
+								</div>
+
+								<div class="tab-pane p-3" id="process">
+
+									<form id="filterProcess" class="form-group m-t-20" autocomplete="off">
+										<div class="row">
+											<div class="col-md-8 d-sm-flex">
+												<a class="btn btn-primary text-white w-150 height-35 my-1 m-r-30"
+												   href="#" onclick="openModalProcess(0)">
+													<i class="fa fa-plus"></i> Processo</a>
+												<input class="form-control my-1" id="nameFilterProcess" name="name"
+												       type="text" placeholder="Nome">
+											</div>
+											<div class="col-md-4 text-end d-sm-flex">
+												<button class="btn btn-danger my-1" type="reset"
+												        onclick="resetTableProcess()">
+													Limpar
+												</button>
+												<button class="btn btn-primary my-1 m-l-10" type="submit">Buscar
+												</button>
+											</div>
+										</div>
+									</form>
+									<hr>
+									<div class="row g-3 align-items-center m-b-30">
+										<div class="col-auto">
+											<span>Exibir </span>
+										</div>
+										<div class="col-auto">
+											<select class="form-control form-select"
+											        onchange="getLimitProcess(this.value, 'processTableBody')">
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select>
+										</div>
+										<div class="col-auto">
+											<span> registros</span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col">
+											<p>Exibindo de <span id="startProcess"></span> a <span id="endProcess"></span> de <span
+													id="totalProcess"></span> registros</p>
+										</div>
+									</div>
+									<div class="row table-responsive-lg">
+										<div class="col">
+											<table class="table table-hover table-sm" id="processTable">
+												<thead>
+												<tr>
+													<th style="width: 30%;">Processo</th>
+													<th class="text-center">Descrição</th>
+													<th class="text-center">Status</th>
+													<th class="text-center">Ações</th>
+												</tr>
+												</thead>
+												<tbody id="processTableBody"></tbody>
+											</table>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col text-center">
+											<div class="spinner-border loaderTable" role="status">
+												<span class="sr-only mx-auto">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<div class="row text-end">
+										<nav aria-label="...">
+											<ul class="pagination justify-content-end pagination-primary"
+											    id="paginationProcess" style="top: auto">
+
+											</ul>
+										</nav>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Cadastro Ambiente-->
+<div class="modal fade" id="modalRoom" tabindex="-1" role="dialog" aria-labelledby="subscriptionModal"
+     aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form id="addRoom" method="post" autocomplete="off">
+				<div class="modal-header">
+					<h5 class="modal-title">Registro de Ambiente</h5>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"
+					        aria-label="Close"></button>
+				</div>
+				<div class="row mt-3">
+					<div class="col text-center">
+						<div class="spinner-border loaderTop" style="width: 5rem; height: 5rem;"
+						     role="status">
+							<span class="sr-only mx-auto">Loading...</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body form-group">
+					<input type="hidden" name="environmentId" id="environmentId">
+					<div class="row">
+						<div class="col-sm-6">
+							<label for="roomEstablishment">Estabelecimento *</label>
+							<select id="roomEstablishment" name="establishment"
+							        class="form-control form-select"
+							        onchange="showCnpjPartner(this.value)">
+								<option value="">Selecionar</option>
+								<option value="0">Do próprio Empregador</option>
+								<option value="1">De Terceiros</option>
+							</select>
+						</div>
+						<div class="col-sm-6" id="cnpjPartnerDiv" style="display: none">
+							<label for="cnpjPartner">CNPJ do Terceiro *</label>
+							<input id="cnpjPartner" name="cnpjPartner" class="form-control" type="text"
+							       data-mask="99.999.999/9999-99" placeholder="CNPJ do Terceiro">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-8">
+							<label for="nameRoom">Nome do Ambiente *</label>
+							<input id="nameRoom" name="name" class="form-control" type="text"
+							       placeholder="Nome do Ambiente">
+						</div>
+						<div class="col-sm-4">
+							<label for="area">Área *</label>
+							<div class="input-group mb-2">
+								<input class="form-control" type="text" id="area" name="area"
+								       placeholder="Área">
+								<span class="input-group-text">m²</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-5">
+							<label for="rightFoot">Pé Direito *</label>
+							<div class="input-group mb-2">
+								<input class="form-control" type="text" id="rightFoot" name="rightFoot"
+								       placeholder="Pé Direito">
+								<span class="input-group-text">m</span>
+							</div>
+						</div>
+						<div class="col-sm-7">
+							<label for="floorRoom">Piso *</label>
+							<select id="floorRoom" name="floor" class="form-control form-select">
+								<option value="">Selecionar</option>
+								<option value="1">Não pavimentado</option>
+								<option value="2">Cimento</option>
+								<option value="3">Cimento Queimado</option>
+								<option value="4">Cerâmica</option>
+								<option value="5">Porcelanato</option>
+								<option value="6">Mármore</option>
+								<option value="7">Granito</option>
+								<option value="8">Laminado de Madeira</option>
+								<option value="9">Assoalho de madeira</option>
+								<option value="10">Vinílico</option>
+								<option value="11">Ladrilho Hidráulico</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="frame">Estrutura *</label>
+							<select id="frame" name="frame" class="form-control form-select">
+								<option value="">Selecionar</option>
+								<option value="1">Alvenaria Convencional ou de Vedação</option>
+								<option value="2">Alvenaria Estrutural</option>
+								<option value="3">Steel Frame</option>
+								<option value="4">Wood Frame</option>
+								<option value="5">Paredes de Concreto</option>
+								<option value="6">Container</option>
+								<option value="7">Drywall</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="liningRoom">Forro *</label>
+							<select id="liningRoom" name="lining" class="form-control form-select">
+								<option value="">Selecionar</option>
+								<option value="1">Sem forro</option>
+								<option value="2">PVC</option>
+								<option value="3">Gesso</option>
+								<option value="4">Gesso acartonado</option>
+								<option value="5">Madeira</option>
+								<option value="6">Lã de vidro</option>
+								<option value="7">Modular</option>
+								<option value="8">Isopor com textura</option>
+								<option value="9">Bambu</option>
+								<option value="10">Concreto Aparente</option>
+								<option value="11">Fibra Mineral Acústica</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="roof">Cobertura *</label>
+							<select id="roof" name="roof" class="form-control form-select">
+								<option value="">Selecionar</option>
+								<option value="1">Sem cobertura</option>
+								<option value="2">Laje Maciça</option>
+								<option value="3">Laje Nervurada</option>
+								<option value="4">Laje Protendida</option>
+								<option value="5">Laje Pré-fabricada com poliestireno (isopor)</option>
+								<option value="6">Laje Pré-fabricada de cerâmica</option>
+								<option value="7">Laje Pré-fabricada de painéis treliçados</option>
+								<option value="8">Telha de cerâmica</option>
+								<option value="9">Telha de fibrocimento</option>
+								<option value="10">Telhas metálicas</option>
+								<option value="11">Telha de polímero</option>
+								<option value="12">Telha de vidro</option>
+								<option value="13">Telhas termoacústicas</option>
+								<option value="14">Membranas (Lonas)</option>
+								<option value="15">Toldo</option>
+								<option value="16">Pergolado</option>
+								<option value="17">Vegetal Rústico (Sapé)</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="ventilation">Ventilaçao *</label>
+							<select id="ventilation" name="ventilation"
+							        class="form-control form-select">
+								<option value="">Selecionar</option>
+								<option value="1">Sem Ventilação</option>
+								<option value="2">Natural</option>
+								<option value="3">Por Central no Teto</option>
+								<option value="4">Por Central na Parede</option>
+								<option value="5">Por Ventilador</option>
+								<option value="6">Geral Diluidora</option>
+								<option value="7">Exaustora</option>
+								<option value="8">Pressão Negativa</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="lightSource">Fonte Luminosa *</label>
+							<select id="lightSource" name="lightSource[]" multiple class="lightSource">
+								<option value=""></option>
+								<option value="1">Luz Natual (Sol)</option>
+								<option value="2">Lâmpada Incandescente Convencional,</option>
+								<option value="3">Lâmpada Incandescente Halógena</option>
+								<option value="4">Lâmpada Fluorescente</option>
+								<option value="5">Lâmpada LED</option>
+								<option value="6">Lâmpada de Fibra Ótica</option>
+								<option value="7">Lâmpada de Descarga</option>
+								<option value="8">Lâmpada de Neon</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6" id="activeEditDiv">
+							<label for="activeRoom">Status</label>
+							<select id="activeRoom" name="active" class="form-control form-select">
+								<option value="1">Ativo</option>
+								<option value="0">Inativo</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row" style="width: 100%;">
+						<div class="col" style="width: 100%">
+          <span
+	          style="bottom: 10px; position: fixed; z-index: 8888; width: 92%; text-align: center; display: none"
+	          class="alert alert-danger" role="alert" id="messageRoom"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-end">
+							<button type="submit" class="btn btn-primary">Salvar Ambiente</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Cadastro Profissionais-->
+<div class="modal fade" id="modalProfessionals" tabindex="-1" role="dialog"
+     aria-labelledby="subscriptionModal"
+     aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form id="addProfessional" method="post" autocomplete="off">
+				<div class="modal-header">
+					<h5 class="modal-title">Registro de Empregados</h5>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"
+					        aria-label="Close"></button>
+				</div>
+				<div class="row mt-3">
+					<div class="col text-center">
+						<div class="spinner-border loaderTop" style="width: 5rem; height: 5rem;"
+						     role="status">
+							<span class="sr-only mx-auto">Loading...</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body form-group">
+					<input type="hidden" name="professionalId" id="professionalId">
+					<input type="hidden" name="companyProfessional" id="companyProfessional"
+					       value="<?= $companySelected->getId() ?>">
+					<div class="row">
+						<div class="col">
+							<label for="nameProfessional">Nome *</label>
+							<input id="nameProfessional" name="name" class="form-control" type="text"
+							       placeholder="Nome">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<label for="cpfProfessional">CPF *</label>
+							<input id="cpfProfessional" name="cpf" class="form-control"
+							       type="text" placeholder="___.___.___-__" data-mask="999.999.999-99">
+						</div>
+						<div class="col-sm-6">
+							<label for="professionalRegistration">Matrícula</label>
+							<input id="professionalRegistration" name="professionalRegistration"
+							       class="form-control" type="text" placeholder="Matrícula">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<label for="birthDateProfessional">Data de Nascimento *</label>
+							<input id="birthDateProfessional" name="birthDate" class="form-control"
+							       type="text"
+							       placeholder="dd/mm/AAAA" data-mask="99/99/9999">
+						</div>
+						<div class="col-sm-6">
+							<label for="sexProfessional">Sexo *</label>
+							<select id="sexProfessional" name="sex" class="form-control form-select">
+								<option value="">Selecionar</option>
+								<option value="1">Masculino</option>
+								<option value="0">Feminino</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<label for="admissionProfessional">Admissão *</label>
+							<input id="admissionProfessional" name="admission" class="form-control"
+							       type="text"
+							       placeholder="dd/mm/AAAA" data-mask="99/99/9999">
+						</div>
+						<div class="col-sm-6">
+							<label for="resignationProfessional">Demissão</label>
+							<input id="resignationProfessional" name="resignation" class="form-control"
+							       type="text"
+							       placeholder="dd/mm/AAAA" data-mask="99/99/9999">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="officeProfessional">Cargo/Função *</label>
+							<select id="officeProfessional" name="office"
+							        class="form-control form-select">
+								<option value="">Selecionar</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<label for="startInOffice">Início no Cargo *</label>
+							<input id="startInOffice" name="startInOffice" class="form-control"
+							       type="text"
+							       placeholder="dd/mm/AAAA" data-mask="99/99/9999">
+						</div>
+						<div class="col-sm-6">
+							<label for="endInOffice">Término no Cargo</label>
+							<input id="endInOffice" name="endInOffice" class="form-control" type="text"
+							       placeholder="dd/mm/AAAA" data-mask="99/99/9999">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="environmentProfessional">Ambiente *</label>
+							<select id="environmentProfessional" name="environment"
+							        class="form-control form-select">
+								<option value="">Selecionar</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="formation">Formação *</label>
+							<input id="formation" name="formation" class="form-control" type="text"
+							       placeholder="Formação">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="professionalAdviser">Conselho Profissional Regional *</label>
+							<input id="professionalAdviser" name="professionalAdviser"
+							       class="form-control"
+							       type="text" placeholder="Conselho Profissional Regional">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="professionalRecord">Registro no Conselho Profissional
+								Regional</label>
+							<input id="professionalRecord" name="professionalRecord"
+							       class="form-control"
+							       type="text" placeholder="Registro no Conselho Profissional Regional">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row" style="width: 100%;">
+						<div class="col" style="width: 100%">
+                            <span
+	                            style="bottom: 10px; position: fixed; z-index: 8888; width: 92%; text-align: center; display: none"
+	                            class="alert alert-danger" role="alert" id="messageProfessional"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-end">
+							<button type="submit" class="btn btn-primary">Salvar Empregado</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Cadastro Cargos-->
+<div class="modal fade" id="modalOffice" tabindex="-1" role="dialog" aria-labelledby="subscriptionModal"
+     aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form id="addOffice" method="post" autocomplete="off">
+				<div class="modal-header">
+					<h5 class="modal-title">Registro de Cargo</h5>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"
+					        aria-label="Close"></button>
+				</div>
+				<div class="row mt-3">
+					<div class="col text-center">
+						<div class="spinner-border loaderTop" style="width: 5rem; height: 5rem;"
+						     role="status">
+							<span class="sr-only mx-auto">Loading...</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<input type="hidden" name="officeId" id="officeId">
+						<input type="hidden" name="companyOffice" id="companyOffice"
+						       value="<?= $companySelected->getId() ?>">
+						<div class="row">
+							<div class="col">
+								<label for="namePosition">Cargo *</label>
+								<input id="namePosition" name="name" class="form-control" type="text"
+								       placeholder="Cargo (Acrescentar: Função e Nível, se houver)">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<label for="man">Prof. Homens *</label>
+								<input id="man" name="man" class="form-control text-center" type="number" min="0"
+								       placeholder="Profissionais Homens" value="0">
+							</div>
+							<div class="col-md-4">
+								<label for="woman">Prof. Mulheres *</label>
+								<input id="woman" name="woman" class="form-control text-center" type="number" min="0"
+								       placeholder="Profissionais Mulheres" value="0">
+							</div>
+							<div class="col-md-4">
+								<label for="minors">Prof. Menores *</label>
+								<input id="minors" name="minors" class="form-control text-center" type="number" min="0"
+								       placeholder="Profissionais Mulheres" value="0">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<label for="environmentOffice">Ambiente *</label>
+								<select id="environmentOffice" name="environment"
+								        class="form-control form-select"></select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<label for="occupation">CBO Equivalente</label>
+								<select id="occupation" name="occupation"
+								        class="form-control select-js occupation-js"
+								        placeholder="Selecionar"
+								        onchange="getOccupationLargeArea(this.value)">
+								</select>
+							</div>
+						</div>
+						<section id="positionActivitiesDiv">
+							<div class="row" id="activity" style="width: 100%">
+								<div class="col text-justify">
+									<label for="positionActivities"
+									       style="margin-bottom: -30px">Atividades *</label>
+									<i class="fa fa-plus-circle ml-2 p-2" id="buttonAdd" onclick="addInputOffice()"
+									   style="margin-bottom: -30px"></i><br>
+									<span class="text-muted text-justify"
+									      style="font-size: 12px; margin-top: -5px">Descrever com exatidão, de forma sucinta, com a utilização
+                                            de verbos no infinitivo impessoal as atividades, físicas ou mentais, realizadas pelo trabalhador. Ex.:
+                                            Operar máquina de envase.
+                                    </span><br>
+								</div>
+							</div>
+							<ul class="row sortable" id="addTextArea"
+							    style="width: 100%; list-style-type: none; margin: 0; padding: 0;">
+								<li class="ui-state-default">
+									<div class="row ui-icon ui-icon-arrowthick-2-n-s">
+										<div class="col-sm-10 text-justify">
+                                            <textarea id="positionActivities" name="activities[]"
+                                                      class="form-control add-textarea"
+                                                      type="text" placeholder="Atividades"></textarea>
+										</div>
+										<div class="col-md-1 my-auto">
+											<i class="fa fa-arrows-alt-v p-2"></i>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</section>
+						<div class="row">
+							<div class="col">
+								<label for="scalesOffice">Tipo de Jornada *</label>
+								<select id="scalesOffice" name="scales" class="form-control form-select"
+								        onchange="showInputScales(this.value)">
+									<option value="">Selecionar</option>
+									<option value="2"
+									        title="Jornada 12 x 36 (12 horas de trabalho seguidas de 36 horas ininterruptas de descanso)">
+										<?= mb_strimwidth('Jornada 12 x 36 (12 horas de trabalho seguidas de 36 horas ininterruptas de descanso)', 0, 60) ?>
+										<?= strlen('Jornada 12 x 36 (12 horas de trabalho seguidas de 36 horas ininterruptas de descanso)') > 60 ? '...' : '' ?>
+									</option>
+									<option value="3">Jornada com horário diário fixo e folga variável
+									</option>
+									<option value="4">Jornada com horário diário fixo e folga fixa (no
+										domingo)
+									</option>
+									<option value="5"
+									        title="Jornada com horário diário fixo e folga fixa (exceto no domingo)">
+										<?= mb_strimwidth('Jornada com horário diário fixo e folga fixa (exceto no domingo)', 0, 60) ?>
+										<?= strlen('Jornada com horário diário fixo e folga fixa (exceto no domingo)') > 60 ? '...' : '' ?>
+									</option>
+									<option value="6" title="Jornada com horário diário fixo e folga fixa (em outro dia da semana), com folga
+                                            adicional periódica no domingo">
+										<?= mb_strimwidth('Jornada com horário diário fixo e folga fixa (em outro dia da semana), com folga
+                                        adicional periódica no domingo', 0, 60) ?>
+										<?= strlen('Jornada com horário diário fixo e folga fixa (em outro dia da semana), com folga
+                                        adicional periódica no domingo') > 60 ? '...' : '' ?>
+									</option>
+									<option value="7">Turno ininterrupto de revezamento</option>
+									<option value="9">Demais tipos de jornada</option>
+								</select>
+							</div>
+						</div>
+						<div class="row" id="scalesOuterOfficeDiv" style="display: none">
+							<div class="col">
+								<label for="scalesOuterOffice">Especificar Jornada *</label>
+								<input name="scalesOuter" id="scalesOuterOffice" class="form-control"
+								       placeholder="Escala">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="dailyJourney">Jornada Diária</label>
+								<input id="dailyJourney" name="dailyJourney" placeholder="HH:mm"
+								       type="text"
+								       class="form-control text-center" data-mask="99:99">
+							</div>
+							<div class="col-sm-6">
+								<label for="weekday">Jornada Semanal</label>
+								<input id="weekday" name="weekday" placeholder="HH:mm" type="text"
+								       class="form-control text-center" data-mask="99:99">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<label for="epi">EPI</label>
+								<select id="epi" name="epi[]" placeholder="Selecionar" multiple>
+									<?php foreach ($epis as $epi): ?>
+										<option value="<?= $epi->getId() ?>"><?= ucfirst($epi->getEpi()) ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<label for="mandatoryTraining">Treinamentos Obrigatórios</label>
+								<select id="mandatoryTraining" name="mandatoryTraining[]"
+								        multiple="multiple"
+								        placeholder="Selecionar">
+									<?php foreach ($mandatoryTrainings as $mandatoryTraining): ?>
+										<option
+											value="<?= $mandatoryTraining->getId() ?>"><?= $mandatoryTraining->getTraining() ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4" id="activeOfficeDiv">
+								<label for="activeOffice">Status</label>
+								<select id="activeOffice" name="active"
+								        class="form-control form-select">
+									<option value="1">Ativo</option>
+									<option value="0">Inativo</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col text-end">
+							<button type="submit" class="btn btn-primary">Salvar Cargo</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Cadastro Processos-->
+<div class="modal fade" id="modalProcess" tabindex="-1" role="dialog" aria-labelledby="subscriptionModal"
+     aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form id="addProcess" method="post" autocomplete="off">
+				<div class="modal-header">
+					<h5 class="modal-title">Registro de Cargo</h5>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"
+					        aria-label="Close"></button>
+				</div>
+				<div class="row mt-3">
+					<div class="col text-center">
+						<div class="spinner-border loaderTop" style="width: 5rem; height: 5rem;"
+						     role="status">
+							<span class="sr-only mx-auto">Loading...</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<input type="hidden" name="processId" id="processId">
+						<input type="hidden" name="companyOffice" id="companyOffice"
+						       value="<?= $companySelected->getId() ?>">
+						<div class="row">
+							<div class="col">
+								<label for="nameProcess">Processo *</label>
+								<input id="nameProcess" name="name" class="form-control" type="text"
+								       placeholder="Processo">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<label for="descriptionProcess">Descrição *</label>
+								<textarea id="descriptionProcess" name="description" class="form-control" type="text"
+								          placeholder="Descrição" rows="3"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<label for="activeProcess">Status</label>
+								<select id="activeProcess" name="active" class="form-control form-select">
+									<option value="1">Ativo</option>
+									<option value="0">Inativo</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col text-end">
+							<button type="submit" class="btn btn-primary">Salvar Processo</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"?v=<?= time() ?>></script>
+<link rel="stylesheet" href="<?= BASEURL ?>assets/css/selectize.css?v=<?= time() ?>"/>
+<link rel="stylesheet" href="<?= BASEURL ?>assets/css/slimselect.css?v=<?= time() ?>"/>
+<script src="<?= BASEURL ?>assets/js/selectize.js?v=<?= time() ?>"></script>
+<script src="<?= BASEURL ?>assets/js/slimselect.js?v=<?= time() ?>"></script>
+<script src="<?= BASEURL ?>assets/functions/company.js?v=<?= time() ?>"></script>
+<script src="<?= BASEURL ?>assets/functions/environment.js?v=<?= time() ?>"></script>
+<script src="<?= BASEURL ?>assets/functions/professionals.js?v=<?= time() ?>"></script>
+<script src="<?= BASEURL ?>assets/functions/process.js?v=<?= time() ?>"></script>
+<script src="<?= BASEURL ?>assets/functions/office.js?v=<?= time() ?>"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js?v=<?= time() ?>"></script>
+
+<script>
+
+	var totalEnvironment = totalOffice = totalProfessional = totalProcess = 1;
+	var partialEnvironment = partialOffice = partialProfessional = partialProcess = indexEnvironment = indexOffice = indexProfessional = indexProcess = 0;
+	var count = 1;
+	var selectEpi = selectTraining = selectLightSource = '';
+	var orderByEnvironment = orderByOffice = orderByProfessional = 'name';
+	var seqByEnvironment = seqByOffice = seqByProfessional = 'asc';
+	var limitProcess = limitEnvironment = limitOffice = limitProfessional = 25;
+
+	$(document).ready(function () {
+		selectEpi = new SlimSelect({
+			select: '#epi',
+			allowDeselectOption: true
+		});
+		selectTraining = new SlimSelect({
+			select: '#mandatoryTraining',
+			allowDeselectOption: true
+		});
+		selectLightSource = new SlimSelect({
+			select: '#lightSource',
+			allowDeselectOption: true
+		});
+		$(function () {
+			$(".sortable").sortable();
+		});
+
+		$('#importProfessional').change(function (e) {
+			let input = e.target;
+			document.getElementById('button').style.display = 'none';
+
+			if (input.files.length > 0) {
+				document.getElementById('button').style.display = 'block';
+			} else {
+				document.getElementById('button').style.display = 'none';
+			}
+		});
+		generateTableRoom();
+		generateTableProfessionals();
+		generateTableOffice();
+		generateTableProcess();
+	});
+
+</script>
+

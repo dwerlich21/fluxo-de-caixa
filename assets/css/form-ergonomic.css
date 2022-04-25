@@ -1,0 +1,106 @@
+#addIdentification .action-button-previous:hover,
+#addIdentification .action-button-previous:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #616161
+}
+fieldset ul{
+    border-bottom: 2px solid #f36f21;
+}
+
+#addIdentification fieldset {
+    background: white;
+    border: 0 none;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding-bottom: 20px;
+    position: relative
+}
+#addIdentification fieldset:not(:first-of-type) {
+    display: none
+}
+* {
+    margin: 0;
+    padding: 0
+}
+html {
+    height: 100%
+}
+
+#addIdentification {
+    text-align: justify;
+    position: relative;
+    margin-top: 20px
+}
+
+#progressbar {
+    text-align: center;
+}
+
+.card {
+    z-index: 0;
+    border: none;
+    border-radius: 0.5rem;
+    position: relative
+}
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: lightgrey
+}
+#progressbar .active {
+    color: #000000
+}
+#progressbar li {
+    list-style-type: none;
+    font-size: 12px;
+    width: 50%;
+    float: left;
+    position: relative
+}
+
+#progressbar #infomationIcon:before {
+    font-family: FontAwesome;
+    content: "\f040"
+}
+#progressbar #termsIcon:before {
+    font-family: FontAwesome;
+    content: "\f2b5"
+}
+
+#progressbar #MetodologyIcon:before {
+    font-family: FontAwesome;
+    content: "\f0e8"
+}
+
+#progressbar #presentationIcon:before {
+    font-family: FontAwesome;
+    content: "\f542"
+}
+
+#progressbar li:before {
+    width: 50px;
+    height: 50px;
+    line-height: 45px;
+    display: block;
+    font-size: 18px;
+    color: #ffffff;
+    background: lightgray;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    padding: 2px
+}
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: lightgray;
+    position: absolute;
+    left: 0;
+    top: 25px;
+    z-index: -1
+}
+#progressbar li.active:before,
+#progressbar li.active:after {
+    background: rgb(0, 32, 96)
+}
