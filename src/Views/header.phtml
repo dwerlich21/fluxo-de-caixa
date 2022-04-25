@@ -64,33 +64,8 @@
 				<div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"
 				                               id="sidebar-toggle"></i></div>
 			</div>
-			<div class="left-menu-header col">
-				<ul>
-					<li style="display: flex">
-						<div class="text-center" style="white-space: normal">
-							<i class="fas fa-building m-r-10"></i>
-							<span style="color:rgb(22, 142, 234);"><?= $companySelected->getSocialReason() ?></span>
-						</div>
-					</li>
-				</ul>
-			</div>
 			<div class="nav-right col pull-right right-menu p-0">
 				<ul class="nav-menus">
-					<li>
-						<a class="text-dark" href="#" onclick="toggleFullScreen()"><i data-feather="maximize"></i></a>
-					</li>
-					<li>
-						<a class="btn btn-primary" href="<?= BASEURL ?>clientes">
-							Clientes
-						</a>
-					</li>
-					<?php if ($user->getType() == 2): ?>
-						<li>
-							<a class="btn btn-secondary" href="<?= BASEURL ?>consultores">
-								Consultores
-							</a>
-						</li>
-					<?php endif; ?>
 					<li class="onhover-dropdown">
 						<div class="bookmark-box">
 							<?php if ($user->getImg()): ?>

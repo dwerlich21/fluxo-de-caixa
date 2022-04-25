@@ -69,7 +69,6 @@
 		public function logout(Request $request, Response $response)
 		{
 			Session::forgot('sgsst');
-			Session::forgot('company');
 			header("Location: {$this->baseUrl}login");
 			exit;
 		}

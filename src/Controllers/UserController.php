@@ -11,18 +11,16 @@ class UserController extends Controller
 	public function user(Request $request, Response $response)
 	{
 		$user = $this->getLogged();
-		if ($user->getType() != 1) $this->redirect('empresa');
-		$companySelected = $this->getCompany($user);
+		if ($user->getType() != 1) $this->redirect('');
 		return $this->renderer->render($response, 'default.phtml', ['page' => 'users/index.phtml', 'menuActive' => ['users'],
-			'user' => $user, 'companySelected' => $companySelected, 'title' => 'Usuários']);
+			'user' => $user, 'title' => 'Usuários']);
 	}
 	
 	public function userEdit(Request $request, Response $response)
 	{
 		$user = $this->getLogged();
-		$companySelected = $this->getCompany($user);
 		return $this->renderer->render($response, 'default.phtml', ['page' => 'users/userEdit.phtml', 'menuActive' => ['users'],
-			'user' => $user, 'companySelected' => $companySelected, 'title' => 'Editar Usuário']);
+			'user' => $user, 'title' => 'Editar Usuário']);
 	}
 	
 	public function saveUser(Request $request, Response $response)
