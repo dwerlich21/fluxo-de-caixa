@@ -47,22 +47,23 @@
 				$params[':name'] = "%$name%";
 				$where .= " AND users.name LIKE :name";
 			}
+			if ($filter['email']) {
+				$email = $filter['email'];
+				$params[':email'] = "%$email%";
+				$where .= " AND users.email LIKE :email";
+			}
 			if ($filter['type']) {
 				$params[':type'] = $filter['type'];
 				$where .= " AND users.type = :type";
 			}
-			if ($filter['active']) {
-				$params[':active'] = $filter['active'];
-				$where .= " AND users.active = :active";
-			}
 			return $where;
 		}
 		
-		public function list($id = 0, $name = null, $type = null, $limit = null, $offset = null): array
+		public function list(array $filter, $limit = null, $offset = null): array
 		{
 			$params = [];
 			$limitSql = $this->generateLimit($limit, $offset);
-			$where = $this->generateWhere($id, $name, $type, $params);
+			$where = $this->generateWhere($filter, $params);
 			$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 			$sql = "SELECT users.id, users.name, users.email, users.type, users.active
                 FROM users
@@ -74,10 +75,10 @@
 			return $sth->fetchAll(\PDO::FETCH_ASSOC);
 		}
 		
-		public function listTotal($id = 0, $name = null, $type = null): array
+		public function listTotal(array $filter): array
 		{
 			$params = [];
-			$where = $this->generateWhere($id, $name, $type, $params);
+			$where = $this->generateWhere($filter, $params);
 			$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 			$sql = "SELECT COUNT(users.id) AS total
                 FROM users

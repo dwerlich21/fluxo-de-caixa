@@ -1,4 +1,4 @@
-var index = partial = name = email = active = type = 0;
+var index = partial = name = email = type = 0;
 var total = 1;
 var limit = 25;
 
@@ -123,7 +123,6 @@ form.addEventListener('submit', e => {
     partial = 0;
     index = 0;
     total = 1;
-    active = formData.active;
     name = formData.name;
     email = formData.email;
     type = formData.type;
@@ -132,7 +131,7 @@ form.addEventListener('submit', e => {
 });
 
 function resetTable() {
-    index = partial = name = email = active = type = 0;
+    index = partial = name = email = type = 0;
     total = 1;
     $("#table tbody").empty();
     generateTable();
@@ -161,7 +160,7 @@ function typeStr(type) {
 
 function generateTable() {
     $('.loaderTable').css('opacity', 1);
-    fetch(`${baseurl}usuarios/listar/?index=${index}&name=${name}&email=${email}&type=${type}&active=${active}&limit=${limit}`, {
+    fetch(`${baseurl}usuarios/listar/?index=${index}&name=${name}&email=${email}&type=${type}&limit=${limit}`, {
         method: "GET",
         credentials: 'same-origin',
         headers: {

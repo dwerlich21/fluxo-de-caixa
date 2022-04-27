@@ -5,44 +5,28 @@
 			<div class="col-xl-12">
 				<div class="card">
 					<div class="card-header">
-						<div class="row">
-							<div class="col-md-8">
-								<h5 class="title">Usuários</h5>
-							</div>
-							<div class="col-md-4 text-end">
-								<a class="float-right btn btn-primary text-white" href="#" onclick="openModal(0)">
-									Usuário <i class="fa fa-plus"></i></a>
-							</div>
-						</div>
 						<form id="filter" autocomplete="off" class="m-t-10">
 							<div class="row">
-								<div class="col-md-4 my-1">
-									<input class="form-control" id="nameFilter" name="name" type="text"
+								<div class="col-md-5 d-sm-flex">
+									<a class="float-right btn btn-primary text-white w-150 m-r-30 height-35 my-1" href="#"
+									   onclick="openModal(0)">Usuário <i class="fa fa-plus"></i></a>
+									<input class="form-control height-35 my-1" id="nameFilter" name="name" type="text"
 									       placeholder="Nome">
 								</div>
-								<div class="col-md-4 my-1">
+								<div class="col-md-2 my-1">
 									<input class="form-control" id="emailFilter" name="email" type="text"
 									       placeholder="E-mail">
 								</div>
 								<div class="col-md-2 my-1">
-									<select name="active" id="activeFilter" class="form-control form-select">
-										<option value="-1">Selecionar</option>
-										<option value="1">Ativo</option>
-										<option value="0">Inativo</option>
-									</select>
-								</div>
-								<div class="col-md-2 my-1">
 									<select name="type" id="typeFilter" class="form-control form-select">
-										<option value="-1">Selecionar</option>
+										<option value="0">Selecionar</option>
 										<option value="1">Admin</option>
-										<option value="0">Convencional</option>
+										<option value="2">Convencional</option>
 									</select>
 								</div>
-							</div>
-							<div class="row mb-3">
-								<div class="col text-end my-1">
-									<button class="btn btn-danger" type="reset" onclick="resetTable()">Limpar</button>
-									<button class="btn btn-primary" type="submit">Filtrar</button>
+								<div class="col text-end d-sm-flex">
+									<button class="btn btn-danger my-1" type="reset" onclick="resetTable()">Limpar</button>
+									<button class="btn btn-primary my-1 m-l-10" type="submit">Filtrar</button>
 								</div>
 							</div>
 						</form>
@@ -145,9 +129,9 @@
 						<div class="col-md-6">
 							<label for="type">Nível</label>
 							<select id="type" name="type" class="form-control form-select">
-								<option value="-1">Selecionar</option>
+								<option value="">Selecionar</option>
 								<option value="1">Admin</option>
-								<option value="0">Convencional</option>
+								<option value="2">Convencional</option>
 							</select>
 						</div>
 						<div class="col-md-6" id="passwordDiv">
