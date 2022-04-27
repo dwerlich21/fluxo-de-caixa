@@ -225,7 +225,7 @@ function validateCpfCnpj(val) {
     }
 }
 
-function verifyMessage(errors, ids, radios, classes) {
+function verifyMessage(errors, ids, classes) {
 
     if (errors.length > 0) {
         let message = '';
@@ -246,11 +246,6 @@ function verifyMessage(errors, ids, radios, classes) {
         }
         for (i = 0; i < classes.length; i++) {
             $('.' + classes[i]).addClass('is-invalid');
-        }
-        if (radios.length > 0) {
-            for (i = 0; i < radios.length; i++) {
-                $('#' + radios[i]).addClass('color-red');
-            }
         }
         showNotify('danger', message, 4000);
         return false;

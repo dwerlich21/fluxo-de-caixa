@@ -43,7 +43,7 @@ class Email
                 'allow_self_signed' => true
             )
         );
-        $mail->setFrom(self::$LOGIN, 'FlashManey');
+        $mail->setFrom(self::$LOGIN, 'FlashMoney');
         $mail->Subject = $subject;
         $mail->Body = $message;
         $mail->IsHTML(true);

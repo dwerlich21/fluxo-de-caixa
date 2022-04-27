@@ -29,6 +29,7 @@ class UserController extends Controller
 		try {
 			$user = $this->getLogged();
 			if ($user->getType() != 1) exit;
+			$this->em->beginTransaction();
 			$data = (array)$request->getParams();
 			$data['userId'] ?? 0;
 			$fields = [
@@ -56,6 +57,7 @@ class UserController extends Controller
 					->setPassword(password_hash($data['password'], PASSWORD_ARGON2I));
 			}
 			$this->em->getRepository(User::class)->save($user);
+			$this->em->commit();
 			return $response->withJson([
 				'status' => 'ok',
 				'message' => $message,

@@ -11,7 +11,7 @@
 	<meta name="author" content="pixelstrap">
 	<link rel="icon" href="<?= BASEURL ?>assets/images/favicon.png" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= BASEURL ?>assets/images/favicon.png" type="image/x-icon">
-	<title>FlashManey - <?= $title ?></title>
+	<title>FlashMoney - <?= $title ?></title>
 	<!-- Google font-->
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link
@@ -58,7 +58,7 @@
 			<div class="main-header-left">
 				<div class="logo-wrapper">
 					<a href="<?= BASEURL ?>empresa">
-						<img height="40px" src="<?= BASEURL ?>assets/img/logo2.png" alt="LogoFlashManey">
+						<img height="40px" src="<?= BASEURL ?>assets/img/logo2.png" alt="LogoFlashMoney">
 					</a>
 				</div>
 				<div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"
@@ -137,6 +137,28 @@
 									<i data-feather="dollar-sign"></i><span>Clientes</span>
 								</a>
 							</li>
+							
+							<li>
+								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+								   href="<?= BASEURL ?>entradas">
+									<i data-feather="log-in"></i><span>Entradas</span>
+								</a>
+							</li>
+							
+							<li>
+								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+								   href="<?= BASEURL ?>saidas">
+									<i data-feather="log-out"></i><span>Saídas</span>
+								</a>
+							</li>
+							
+							<li>
+								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+								   href="<?= BASEURL ?>extratos">
+									<i data-feather="list"></i><span>Extratos</span>
+								</a>
+							</li>
+							
 						</ul>
 					</div>
 					<div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>

@@ -86,7 +86,7 @@ formAdd.addEventListener('submit', e => {
                     resetTable();
                 }, 2000);
             } else {
-                showNotify('equipament', json.message, 1500);
+                showNotify('danger', json.message, 1500);
             }
         });
     });

@@ -1,107 +1,89 @@
 <div class="page-body">
-	<!-- Container-fluid starts-->
-	<div class="container-fluid m-t-20">
-		<div class="row">
-			<div class="col-xl-12">
-				<div class="card">
-					<div class="card-header">
+	<div class="container-fluid">
+		<div class="col-xl-12">
+			<div class="card">
+				<div class="card-header pb-0">
+					<form id="filter" autocomplete="off" class="form-group">
 						<div class="row">
-							<div class="col-md-8">
-								<h5 class="title">Usuários</h5>
-							</div>
-							<div class="col-md-4 text-end">
-								<a class="float-right btn btn-primary text-white" href="#" onclick="openModal(0)">
-									Usuário <i class="fa fa-plus"></i></a>
-							</div>
-						</div>
-						<form id="filter" autocomplete="off" class="m-t-10">
-							<div class="row">
-								<div class="col-md-4 my-1">
-									<input class="form-control" id="nameFilter" name="name" type="text"
-									       placeholder="Nome">
-								</div>
-								<div class="col-md-4 my-1">
-									<input class="form-control" id="emailFilter" name="email" type="text"
-									       placeholder="E-mail">
-								</div>
-								<div class="col-md-2 my-1">
-									<select name="active" id="activeFilter" class="form-control form-select">
-										<option value="-1">Selecionar</option>
-										<option value="1">Ativo</option>
-										<option value="0">Inativo</option>
-									</select>
-								</div>
-								<div class="col-md-2 my-1">
-									<select name="type" id="typeFilter" class="form-control form-select">
-										<option value="-1">Selecionar</option>
-										<option value="1">Admin</option>
-										<option value="0">Convencional</option>
-									</select>
-								</div>
-							</div>
-							<div class="row mb-3">
-								<div class="col text-end my-1">
-									<button class="btn btn-danger" type="reset" onclick="resetTable()">Limpar</button>
-									<button class="btn btn-primary" type="submit">Filtrar</button>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="card-body">
-						
-						<div class="row g-3 align-items-center m-b-30">
-							<div class="col-auto">
-								<span>Exibir </span>
-							</div>
-							<div class="col-auto">
-								<select class="form-control form-select"
-								        onchange="getLimit(this.value, 'tableBody')">
-									<option value="25">25</option>
-									<option value="50">50</option>
-									<option value="100">100</option>
+							<div class="col-md-5 d-sm-flex">
+								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#" onclick="openModal(0)" style="min-width: 180px"><i
+										class="fa fa-plus"></i> Cliente</a>
+								<select id="gesFilter" name="ges" class="form-select form-control my-1">
+									<?php foreach ($offices as $office): ?>
+										<option value="<?= $office->getId() ?>"><?= $office->getName() ?></option>
+									<?php endforeach; ?>
 								</select>
 							</div>
-							<div class="col-auto">
-								<span> registros</span>
+							<div class="col-md-3 mt-auto">
+								<select id="equipamentFilter" name="equipament" class="form-select form-control my-1">
+									<?php foreach ($equipaments as $equipament): ?>
+										<option value="<?= $equipament->getId() ?>"><?= $equipament->getName() ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<div class="col-md-4 text-end d-sm-flex">
+								<button class="btn btn-danger my-1" type="reset" onclick="resetTable()">Limpar
+								</button>
+								<button class="btn btn-primary my-1 m-l-10" type="submit">Buscar</button>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col">
-								<p>Exibindo de <span id="start"></span> a <span id="end"></span> de <span
-										id="total"></span> registros</p>
+					</form>
+					<hr>
+				</div>
+				<div class="card-body">
+					<div class="row g-3 align-items-center m-b-30">
+						<div class="col-auto">
+							<span>Exibir </span>
+						</div>
+						<div class="col-auto">
+							<select class="form-control form-select"
+							        onchange="getLimit(this.value, 'equipamentTableBody')">
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+							</select>
+						</div>
+						<div class="col-auto">
+							<span> registros</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<p>Exibindo de <span id="startEquipament"></span> a <span id="endEquipament"></span> de <span
+									id="totalEquipament"></span> registros</p>
+						</div>
+					</div>
+					<div class="row table-responsive-xxl">
+						<div class="col">
+							<table class="table table-hover table-sm" id="table">
+								<thead>
+								<tr>
+									<th>Nome</th>
+									<th class="text-center">E-mail</th>
+									<th class="text-center">Telefone</th>
+									<th class="text-center">País</th>
+									<th class="text-center">Status</th>
+									<th class="text-center">Ações</th>
+								</tr>
+								</thead>
+								<tbody id="tableBody"></tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-center">
+							<div class="spinner-border loaderTable" role="status">
+								<span class="sr-only mx-auto">Loading...</span>
 							</div>
 						</div>
-						<div class="row table-responsive-lg">
-							<div class="col">
-								<table class="table table-hover " id="table">
-									<thead>
-									<tr>
-										<th>Nome</th>
-										<th class="text-center">Nível</th>
-										<th class="text-center">E-mail</th>
-										<th class="text-center">Status</th>
-										<th class="text-center">Ações</th>
-									</tr>
-									</thead>
-									<tbody id="tableBody"></tbody>
-								</table>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col text-center">
-								<div class="spinner-border loaderTable" role="status">
-									<span class="sr-only mx-auto">Loading...</span>
-								</div>
-							</div>
-						</div>
-						<div class="row text-end">
-							<nav aria-label="...">
-								<ul class="pagination justify-content-end pagination-primary"
-								    id="pagination" style="top: auto">
-								
-								</ul>
-							</nav>
-						</div>
+					</div>
+					<div class="row text-end">
+						<nav aria-label="...">
+							<ul class="pagination justify-content-end pagination-primary"
+							    id="pagination" style="top: auto">
+
+							</ul>
+						</nav>
 					</div>
 				</div>
 			</div>
@@ -116,7 +98,7 @@
 		<div class="modal-content">
 			<form id="addForm" method="post" autocomplete="off">
 				<div class="modal-header">
-					<h5 class="modal-title">Registro de Usuário</h5>
+					<h5 class="modal-title">Registro de Cliente</h5>
 					<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="row mt-3">
@@ -127,39 +109,45 @@
 					</div>
 				</div>
 				<div class="modal-body form-group">
-					<input type="hidden" name="userId" id="userId">
+					<input type="hidden" name="clientId" id="clientId">
 					<div class="row">
-						<div class="col">
-							<label for="name">Nome</label>
+						<div class="col-md-7">
+							<label for="name">Nome *</label>
 							<input id="name" name="name" class="form-control" type="text" placeholder="Nome">
+						</div>
+						<div class="col-md-5">
+							<label for="phone">Telefone *</label>
+							<input id="phone" name="phone" class="form-control" type="text" placeholder="Telefone">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<label for="country">País *</label>
+							<input id="country" name="country" class="form-control" type="text"
+							       placeholder="País">
+						</div>
+						<div class="col-md-6">
+							<label for="city">Cidade *</label>
+							<input id="city" name="city" class="form-control" type="text"
+							       placeholder="Cidade">
 						</div>
 					</div>
 					<div class="row">
 						<div class="col">
-							<label for="email">E-mail</label>
+							<label for="email">E-mail *</label>
 							<input id="email" name="email" class="form-control" type="email"
 							       placeholder="E-mail">
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
-							<label for="type">Nível</label>
-							<select id="type" name="type" class="form-control form-select">
-								<option value="-1">Selecionar</option>
-								<option value="1">Admin</option>
-								<option value="0">Convencional</option>
-							</select>
-						</div>
-						<div class="col-md-6" id="passwordDiv">
-							<label for="password">Senha</label>
-							<input id="password" name="password" class="form-control" type="text"
+						<div class="col-md-8" id="passwordDiv">
+							<label for="password">Senha *</label>
+							<input id="password" name="password" class="form-control" type="password"
 							       placeholder="Senha">
 							<span class="f-12 text-muted m-l-5">Mínimo 8 caracteres</span>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4" id="activeDiv">
-							<label for="active">Status</label>
+						<div class="col-md-4">
+							<label for="active">Status *</label>
 							<select id="active" name="active" class="form-control form-select">
 								<option value="1">Ativo</option>
 								<option value="0">Inativo</option>
@@ -169,7 +157,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="col text-end">
-						<button type="submit" class="btn btn-primary">Salvar Usuário</button>
+						<button type="submit" class="btn btn-primary">Salvar Cliente</button>
 					</div>
 				</div>
 			</form>
@@ -177,4 +165,4 @@
 	</div>
 </div>
 
-<script src="<?= BASEURL ?>assets/functions/user.js?v=<?= time() ?>"></script>
+<script src="<?= BASEURL ?>assets/functions/client.js?v=<?= time() ?>"></script>() ?>"></script>

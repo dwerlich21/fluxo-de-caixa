@@ -88,8 +88,8 @@ function validateForm() {
     } else {
         greens.push('email')
     }
-    if (formData.type < 0) {
-        errors.push('<b> Tipo</b>');
+    if (formData.type.trim() == '') {
+        errors.push('<b> Nível</b>');
         ids.push('type');
     } else {
         greens.push('type')

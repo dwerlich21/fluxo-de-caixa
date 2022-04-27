@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
-use App\helpers\Validator;
+use App\Helpers\Validator;
+use App\Models\Entities\Client;
 use App\Models\Entities\User;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -15,48 +17,49 @@ class ClientController extends Controller
 		if ($user->getType() > 2) $this->redirect('extratos');
 		$users = $this->em->getRepository(User::class)->findBy([], ['name' => 'asc']);
 		return $this->renderer->render($response, 'default.phtml', ['page' => 'clients/index.phtml', 'menuActive' => ['clients'],
-			'user' => $user, 'users' => $users, 'title' => 'Usuários']);
-	}
-	
-	public function edit(Request $request, Response $response)
-	{
-		$user = $this->getLogged();
-		return $this->renderer->render($response, 'default.phtml', ['page' => 'users/userEdit.phtml',
-			'user' => $user, 'title' => 'Meu Perfil']);
+			'user' => $user, 'users' => $users, 'title' => 'Clientes']);
 	}
 	
 	public function save(Request $request, Response $response)
 	{
 		try {
 			$user = $this->getLogged();
-			if ($user->getType() != 1) exit;
+			if ($user->getType() > 2) exit;
+			$this->em->beginTransaction();
 			$data = (array)$request->getParams();
-			$data['userId'] ?? 0;
-			$fields = [
-				'name' => 'Nome',
-				'email' => 'E-mail',
-				'type' => 'Tipo'
-			];
-			$message = 'Usuário registrado com sucesso!';
-			Validator::requireValidator($fields, $data);
-			if ($data['userId'] == 0) {
+			$data['clientId'] ?? 0;
+			$message = 'Cliente registrado com sucesso!';
+			if ($data['clientId'] == 0) {
 				$verify = $this->em->getRepository(User::class)->findOneBy(['email' => $data['email']]);
 				if ($verify) throw new Exception('E-mail já registrado!');
 			}
-			$user = new User();
-			if ($data['userId'] > 0) {
-				$user = $this->em->getRepository(User::class)->find($data['userId']);
-				$message = 'Usuário editado com sucesso!';
-			}
 			
+			// Salvar Cliente
+			$client = new Client();
+			if ($data['clientId'] > 0) {
+				$client = $this->em->getRepository(Client::class)->find($data['clientId']);
+				$message = 'Cliente editado com sucesso!';
+			}
+			$client->setCity($data['city'])
+				->setPhone($data['phone'])
+				->setCountry($data['country']);
+			$this->em->getRepository(Client::class)->save($client);
+			
+			// Salvar dados de Acesso do Cliente
+			$user = new User();
+			if ($data['clientId'] > 0) {
+				$user = $this->em->getRepository(User::class)->findOneBy(['client' => $client]);
+			}
 			$user->setName($data['name'])
 				->setEmail($data['email'])
-				->setType($data['type']);
-			if ($data['userId'] == 0) {
-				$user->setActive(1)
+				->setClient($client)
+				->setType(3);
+			if ($data['clientId'] == 0) {
+				$user->setActive($data['active'])
 					->setPassword(password_hash($data['password'], PASSWORD_ARGON2I));
 			}
 			$this->em->getRepository(User::class)->save($user);
+			$this->em->commit();
 			return $response->withJson([
 				'status' => 'ok',
 				'message' => $message,
@@ -74,63 +77,14 @@ class ClientController extends Controller
 		if ($user->getType() != 1) exit;
 		$id = $request->getQueryParam('id');
 		$status = $request->getQueryParam('status');
-		$u = $this->em->getRepository(User::class)->find($id);
+		$u = $this->em->getRepository(User::class)->findOneBy(['client' => $id]);
 		$u->setActive($status);
 		$this->em->getRepository(User::class)->save($u);
 		return $response->withJson([
 			'status' => 'ok',
-			'message' => "Status do usuário alterado para {$u->activeStr()}",
+			'message' => "Status do cliente alterado para {$u->activeStr()}",
 		], 201)
 			->withHeader('Content-type', 'application/json');
-	}
-	
-	public function editUserSave(Request $request, Response $response)
-	{
-		try {
-			$user = $this->getLogged();
-			$this->em->beginTransaction();
-			$data = (array)$request->getParams();
-			$files = $request->getUploadedFiles();
-			$fields = [
-				'password' => 'Senha Atual',
-				'email' => 'Email',
-				'name' => 'Name',
-				'newPassword' => 'Nova Senha',
-				'newPassword2' => 'Confirmar Nova Senha',
-			];
-			Validator::requireValidator($fields, $data);
-			if (!password_verify($data['newPassword'], $user->getPassword())) throw new Exception('Senha Atual Incorreta!');
-			if ($data['newPassword'] != $data['newPassword2']) throw new Exception('As senhas não são iguais!');
-			$user = $this->saveUserImg($files, $user);
-			$user->setEmail($data['email'])
-				->setName($data['name'])
-				->setPassword(password_hash($data['password'], PASSWORD_ARGON2I));
-			$this->em->getRepository(User::class)->save($user);
-			$this->em->commit();
-			return $response->withJson([
-				'status' => 'ok',
-				'message' => 'Usuário editado com sucesso!',
-			], 201)
-				->withHeader('Content-type', 'application/json');
-		} catch (\Exception $e) {
-			return $response->withJson(['status' => 'error',
-				'message' => $e->getMessage(),])->withStatus(500);
-		}
-	}
-	
-	private function saveUserImg($files, User $user): User
-	{
-		$folder = UPLOAD_FOLDER;
-		$imgUserFile = $files['imgUser'];
-		if ($imgUserFile && $imgUserFile->getClientFilename()) {
-			$time = time();
-			$extension = explode('.', $imgUserFile->getClientFilename());
-			$extension = end($extension);
-			$target = "{$folder}{$time}imgUserFile.{$extension}";
-			$imgUserFile->moveTo($target);
-			$user->setImg($target);
-		}
-		return $user;
 	}
 	
 	public function list(Request $request, Response $response)
@@ -144,8 +98,8 @@ class ClientController extends Controller
 		$filter['active'] = $request->getQueryParam('active');
 		$index = $request->getQueryParam('index');
 		$limit = $request->getQueryParam('limit');
-		$users = $this->em->getRepository(User::class)->list($filter, $limit, $index * $limit);
-		$total = $this->em->getRepository(User::class)->listTotal($filter)['total'];
+		$users = $this->em->getRepository(Client::class)->list($filter, $limit, $index * $limit);
+		$total = $this->em->getRepository(Client::class)->listTotal($filter)['total'];
 		$partial = ($index * $limit) + sizeof($users);
 		$partial = $partial <= $total ? $partial : $total;
 		return $response->withJson([
@@ -154,6 +108,18 @@ class ClientController extends Controller
 			'total' => (int)$total,
 			'partial' => $partial,
 		], 201)
+			->withHeader('Content-type', 'application/json');
+	}
+	
+	public function data(Request $request, Response $response)
+	{
+		$this->getLogged(true);
+		$filter['id'] = $request->getAttribute('route')->getArgument('id');
+		$client = $this->em->getRepository(Client::class)->data($filter);
+		return $response->withJson([
+			'status' => 'ok',
+			'message' => $client,
+		], 200)
 			->withHeader('Content-type', 'application/json');
 	}
 }
