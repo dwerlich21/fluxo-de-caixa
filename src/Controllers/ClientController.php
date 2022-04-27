@@ -1,19 +1,20 @@
 <?php
+
 namespace App\Controllers;
 
-use App\Helpers\Validator;
+use App\helpers\Validator;
 use App\Models\Entities\User;
-use Exception;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-class UserController extends Controller
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+
+class ClientController extends Controller
 {
 	public function index(Request $request, Response $response)
 	{
 		$user = $this->getLogged();
-		if ($user->getType() != 1) $this->redirect('');
+		if ($user->getType() > 2) $this->redirect('extratos');
 		$users = $this->em->getRepository(User::class)->findBy([], ['name' => 'asc']);
-		return $this->renderer->render($response, 'default.phtml', ['page' => 'users/index.phtml', 'menuActive' => ['users'],
+		return $this->renderer->render($response, 'default.phtml', ['page' => 'clients/index.phtml', 'menuActive' => ['clients'],
 			'user' => $user, 'users' => $users, 'title' => 'Usuários']);
 	}
 	

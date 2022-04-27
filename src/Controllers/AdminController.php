@@ -21,8 +21,8 @@ class AdminController extends Controller
 	public function index(Request $request, Response $response)
 	{
 		$user = $this->getLogged();
-		return $this->renderer->render($response, 'default.phtml', ['page' => 'index.phtml', 'menuActive' => ['dashboard'],
-			'user' => $user, 'title' => 'Dashboard']);
+		return $this->renderer->render($response, 'default.phtml', ['page' => 'index.phtml', 'menuActive' => ['home'],
+			'user' => $user, 'title' => 'Home']);
 	}
 }
 

@@ -9,7 +9,7 @@ function showNotify(type, message, delay) {
         message: returnMessage,
     }, {
         type: type,
-        allow_dismiss:false,
+        allow_dismiss: false,
         placement: {
             from: "bottom",
             align: "center"
@@ -293,6 +293,30 @@ function endLoading() {
     }, 500)
 }
 
+function delElement(route, id) {
+    fetch(`${baseurl}${route}/excluir/${id}`, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        response.json().then(json => {
+            if (response.status === 200) {
+                showNotify('success', json.message, 2000);
+                $('#line' + id).hide(200);
+                total = parseInt(total) - 1;
+                partial = parseInt(partial) - 1;
+                $('#total').text(total);
+                $('#partial').text(partial);
+            } else {
+                showNotify('equipament', json.message, 2000);
+            }
+        });
+    });
+}
+
 function generatePagination(total, body, id, indexPag, limitPag) {
     let div = Math.ceil(total / limitPag);
 
@@ -402,4 +426,42 @@ function isValidDate(date) {
     } else {
         return true;
     }
+}
+
+function buttonStatus(status, id, route) {
+    if (status == 1) {
+        return `
+            <div class="badge badge-primary label-square pointer" onclick="changeStatus(${id}, 0, '${route}')">
+               <span class="f-14">Ativo</span>
+            </div>
+            `;
+    } else if (status == 0) {
+        return `
+            <div class="badge badge-danger label-square pointer" onclick="changeStatus(${id}, 1, '${route}')">
+               <span class="f-14">Inativo</span>
+            </div>
+            `;
+    }
+}
+
+function changeStatus(id, status, route) {
+    fetch(`${baseurl}${route}/novo-status/?id=${id}&status=${status}`, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        response.json().then(json => {
+            if (response.status === 201) {
+                showNotify('success', json.message, 1500);
+                setTimeout(function () {
+                    resetTable();
+                }, 1000)
+            } else {
+                showNotify('danger', json.message, 1500);
+            }
+        });
+    });
 }

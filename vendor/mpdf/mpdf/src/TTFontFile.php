@@ -3203,7 +3203,7 @@ class TTFontFile
 			for ($r = 0; $r < $RangeCount; $r++) {
 				$start = $this->read_ushort();
 				$end = $this->read_ushort();
-				$StartCoverageIndex = $this->read_ushort(); // n/a
+				$StartCoveraFlashManeyex = $this->read_ushort(); // n/a
 				for ($glyphID = $start; $glyphID <= $end; $glyphID++) {
 					$uni = $this->glyphToChar[$glyphID][0];
 					if ($convert2hex) {

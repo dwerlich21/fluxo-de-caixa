@@ -11,7 +11,7 @@
 	<meta name="author" content="pixelstrap">
 	<link rel="icon" href="<?= BASEURL ?>assets/images/favicon.png" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= BASEURL ?>assets/images/favicon.png" type="image/x-icon">
-	<title>GEind - <?= $title ?></title>
+	<title>FlashManey - <?= $title ?></title>
 	<!-- Google font-->
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link
@@ -58,19 +58,29 @@
 			<div class="main-header-left">
 				<div class="logo-wrapper">
 					<a href="<?= BASEURL ?>empresa">
-						<img height="40px" src="<?= BASEURL ?>assets/img/logo2.png" alt="LogoGEind">
+						<img height="40px" src="<?= BASEURL ?>assets/img/logo2.png" alt="LogoFlashManey">
 					</a>
 				</div>
 				<div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"
 				                               id="sidebar-toggle"></i></div>
+			</div>
+			<div class="left-menu-header col">
+				<ul>
+					<li style="display: flex">
+						<div class="text-center" style="white-space: normal">
+							<i class="fas fa-user m-r-10"></i>
+							<span style="color:rgb(22, 142, 234);"><?= $user->getName() ?></span>
+						</div>
+					</li>
+				</ul>
 			</div>
 			<div class="nav-right col pull-right right-menu p-0">
 				<ul class="nav-menus">
 					<li class="onhover-dropdown">
 						<div class="bookmark-box">
 							<?php if ($user->getImg()): ?>
-							<img style="border-radius: 50%; max-height: 40px"
-							     src="<?= BASEURL ?>uploads/<?= $user->getImg() ?>" alt="ImagemPerfil">
+								<img style="border-radius: 50%; max-height: 40px"
+								     src="<?= BASEURL ?>uploads/<?= $user->getImg() ?>" alt="ImagemPerfil">
 							<?php else: ?>
 								<img style="border-radius: 50%; max-height: 40px"
 								     src="<?= BASEURL ?>assets/img/user.png" alt="ImagemGenerica">
@@ -105,60 +115,26 @@
 					<div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
 					<div id="mainnav">
 						<ul class="nav-menu custom-scrollbar">
-							
+
 							<li style="margin-top: -45px">
-								<a class="nav-link link-nav <?= in_array('company', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>empresa">
-									<i data-feather="home"></i><span> Empresa</span>
-								</a>
-							</li>
-							
-							<li>
-								<a class="nav-link link-nav <?= in_array('danger', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>perigos">
-									<i data-feather="alert-triangle"></i><span>Perigos</span>
-								</a>
-							</li>
-							
-							<li>
-								<a class="nav-link link-nav <?= in_array('aep', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>aep">
-									<i data-feather="file-text"></i><span>AEP</span>
+								<a class="nav-link link-nav <?= in_array('home', $menuActive) ? 'active-dash' : '' ?>"
+								   href="<?= BASEURL ?>">
+									<i data-feather="home"></i><span> Home</span>
 								</a>
 							</li>
 
+							<?php if ($user->getType() == 1): ?>
+								<li>
+									<a class="nav-link link-nav <?= in_array('users', $menuActive) ? 'active-dash' : '' ?>"
+									   href="<?= BASEURL ?>usuarios">
+										<i data-feather="users"></i><span>Usuários</span>
+									</a>
+								</li>
+							<?php endif; ?>
 							<li>
-								<a class="nav-link link-nav <?= in_array('risk-inventory', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>inventario-de-risco">
-									<i data-feather="file-text"></i><span>Inventário</span>
-								</a>
-							</li>
-
-							<li>
-								<a class="nav-link link-nav <?= in_array('action-plan', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>plano-de-acao">
-									<i data-feather="file-text"></i><span>Plano de Ação</span>
-								</a>
-							</li>
-
-							<li>
-								<a class="nav-link link-nav <?= in_array('equipaments', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>equipamentos">
-									<i data-feather="settings"></i><span>Equipamentos</span>
-								</a>
-							</li>
-
-							<li>
-								<a class="nav-link link-nav <?= in_array('glossary', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>glossario">
-									<i data-feather="settings"></i><span>Glossário</span>
-								</a>
-							</li>
-
-							<li>
-								<a class="nav-link link-nav <?= in_array('gallery', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>galeria">
-									<i data-feather="image"></i><span>Galeria</span>
+								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+								   href="<?= BASEURL ?>clientes">
+									<i data-feather="dollar-sign"></i><span>Clientes</span>
 								</a>
 							</li>
 						</ul>

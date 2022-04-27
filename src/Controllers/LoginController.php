@@ -148,7 +148,7 @@
                     <p>Segue código de verificação de e-mail para alteração de senha:</p>
                     <p style='font-size: 25px; letter-spacing: 1em; text-align: center; margin: 10px 0'>{$cod}</p>
                     <p>Insira o código no campo solicitado e faça sua alteração.</p>";
-				Email::send($user->getEmail(), $user->getName(), 'Recuperação de Senha - GEind', $msg);
+				Email::send($user->getEmail(), $user->getName(), 'Recuperação de Senha - FlashManey', $msg);
 				return $response->withJson([
 					'status' => 'ok',
 					'message' => 'Foi enviado um e-mail com um código para redefinição de senha.',

@@ -4,7 +4,6 @@ var name = partial = index = equipament = ges = 0;
 var total = 1;
 var orderBy = 'id';
 var seqBy = 'desc';
-var selectEnvironment = selectGes = selectGesFilter = selectDanger = selectDangerFilter = selectProcess = '';
 var limit = 25;
 
 function openModal(id) {
@@ -100,42 +99,18 @@ formFilter.addEventListener('submit', e => {
     total = 1;
     equipament = formData.equipament;
     ges = formData.ges;
-    $("#equipamentTable tbody").empty();
+    $("#tabe tbody").empty();
     generateTable();
 });
-
-function delDanger(id) {
-    fetch(`${baseurl}equipamentos/excluir/${id}`, {
-        method: 'DELETE',
-        credentials: 'same-origin',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    }).then(response => {
-        response.json().then(json => {
-            if (response.status === 200) {
-                showNotify('success', json.message, 2000);
-                $('#line' + id).hide(200);
-                total = parseInt(total) - 1;
-                partial = parseInt(partial) - 1;
-                $('#total').text(total);
-                $('#partial').text(partial);
-            } else {
-                showNotify('equipament', json.message, 2000);
-            }
-        });
-    });
-}
 
 function resetTable() {
     total = 1;
     partial = index = name = equipament = ges = 0;
-    $("#equipamentTable tbody").empty();
+    $("#tabe tbody").empty();
     generateTable();
 }
 
-function generateDangerTable(equipament) {
+function generateLines(equipament) {
 
     let actions = '';
     actions += `<i class="fa fa-pencil m-r-10 text-info pointer" title="Editar" onclick="openModal(${equipament.id})"></i>
@@ -175,12 +150,12 @@ function generateTable() {
             $('#endDanger').text(json.partial);
             total = json.total;
             if (json.message.length > 0) {
-                let options = json.message.map(generateDangerTable);
-                $("#equipamentTable tbody").append(options);
+                let options = json.message.map(generateLines);
+                $("#tabe tbody").append(options);
             } else {
-                $("#equipamentTable tbody").append(`<tr><td colspan="8" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                $("#tabe tbody").append(`<tr><td colspan="8" class="text-center">Nenhum resultado encontrado</td></tr>`);
             }
-            if (json.message.length > 0) generatePagination(total, 'equipamentTableBody', 'paginationDanger', index, limit);
+            if (json.message.length > 0) generatePagination(total, 'tableBody', 'pagination', index, limit);
         });
     });
 }

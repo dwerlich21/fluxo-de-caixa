@@ -35,34 +35,38 @@
 			return $limitSql;
 		}
 		
-		private function generateWhere($id = 0, $name = null, $type = null, &$params): string
+		private function generateWhere(array $filter, &$params): string
 		{
 			$where = '';
-			if ($id) {
-				$params[':id'] = $id;
+			if ($filter['id']) {
+				$params[':id'] = $filter['id'];
 				$where .= " AND users.id = :id";
 			}
-			if ($name) {
+			if ($filter['name']) {
+				$name = $filter['name'];
 				$params[':name'] = "%$name%";
 				$where .= " AND users.name LIKE :name";
 			}
-			if ($type > 0) {
-				$params[':type'] = $type;
+			if ($filter['type']) {
+				$params[':type'] = $filter['type'];
 				$where .= " AND users.type = :type";
+			}
+			if ($filter['active']) {
+				$params[':active'] = $filter['active'];
+				$where .= " AND users.active = :active";
 			}
 			return $where;
 		}
 		
-		public function list(User $user, $id = 0, $name = null, $type = null, $limit = null, $offset = null): array
+		public function list($id = 0, $name = null, $type = null, $limit = null, $offset = null): array
 		{
 			$params = [];
-			$params[':consultant'] = $user->getConsultant()->getId();
 			$limitSql = $this->generateLimit($limit, $offset);
 			$where = $this->generateWhere($id, $name, $type, $params);
 			$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 			$sql = "SELECT users.id, users.name, users.email, users.type, users.active
                 FROM users
-                WHERE users.type > 1 AND users.consultant = :consultant {$where}
+                WHERE users.type < 3 {$where}
                 ORDER BY type ASC, name ASC {$limitSql}
                ";
 			$sth = $pdo->prepare($sql);
@@ -70,71 +74,17 @@
 			return $sth->fetchAll(\PDO::FETCH_ASSOC);
 		}
 		
-		public function listTotal(User $user, $id = 0, $name = null, $type = null): array
+		public function listTotal($id = 0, $name = null, $type = null): array
 		{
 			$params = [];
-			$params[':consultant'] = $user->getConsultant()->getId();
 			$where = $this->generateWhere($id, $name, $type, $params);
 			$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 			$sql = "SELECT COUNT(users.id) AS total
                 FROM users
-                WHERE users.type > 1  AND users.consultant = :consultant {$where}
+                WHERE users.type < 3  {$where}
                ";
 			$sth = $pdo->prepare($sql);
 			$sth->execute($params);
 			return $sth->fetch(\PDO::FETCH_ASSOC);
-		}
-		
-		
-		public function findConsultants(User $user, $id = 0, $name = null, $type = null, $limit = null, $offset = null): array
-		{
-			$params = [];
-			$params[':userAdmin'] = $user->getId();
-			$limitSql = $this->generateLimit($limit, $offset);
-			$where = $this->generateWhere($id, $name, $type, $params);
-			$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
-			$sql = "SELECT users.id, users.name, users.email, users.active, users.type, addressUserMaster.cnpj, addressUserMaster.cpf,
-                addressUserMaster.zipCode, addressUserMaster.state, addressUserMaster.city, addressUserMaster.phone,
-                addressUserMaster.address, addressUserMaster.neighborhood
-                FROM users
-                LEFT JOIN addressUserMaster ON addressUserMaster.user = users.id
-                WHERE (users.type = 6 OR users.type = 2) AND (users.userAdmin = :userAdmin OR users.id = :userAdmin) {$where}
-                ORDER BY type, name ASC {$limitSql}
-               ";
-			$sth = $pdo->prepare($sql);
-			$sth->execute($params);
-			return $sth->fetchAll(\PDO::FETCH_ASSOC);
-		}
-		
-		public function findConsultantsTotal(User $user, $id = 0, $name = null, $type = null): array
-		{
-			$params = [];
-			$params[':userAdmin'] = $user->getId();
-			$where = $this->generateWhere($id, $name, $type, $params);
-			$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
-			$sql = "SELECT COUNT(users.id) AS total
-                FROM users
-                LEFT JOIN addressUserMaster ON addressUserMaster.user = users.id
-                WHERE (users.type = 6 OR users.type = 2) AND (users.userAdmin = :userAdmin OR users.id = :userAdmin) {$where}
-               ";
-			$sth = $pdo->prepare($sql);
-			$sth->execute($params);
-			return $sth->fetch(\PDO::FETCH_ASSOC);
-		}
-		
-		public function findProfessional(Company $companySelected): array
-		{
-			$params = [];
-			$params[':company'] = $companySelected->getId();
-			$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
-			$sql = "SELECT users.name
-					FROM users
-					JOIN professional ON professional.user = users.id
-					WHERE users.type = 4 AND users.active = 1 AND professional.sesmt = 1 AND professional.company = :company
-					ORDER BY name
-               ";
-			$sth = $pdo->prepare($sql);
-			$sth->execute($params);
-			return $sth->fetchAll(\PDO::FETCH_ASSOC);
 		}
 	}
