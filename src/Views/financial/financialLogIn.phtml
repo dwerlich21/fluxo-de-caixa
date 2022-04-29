@@ -5,12 +5,30 @@
 				<div class="card-header pb-0">
 					<form id="filter" autocomplete="off" class="form-group">
 						<div class="row">
-							<div class="col-md-8 d-sm-flex">
-								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#" onclick="openModal(0)" style="min-width: 180px"><i
+							<div class="col-md-5 d-sm-flex">
+								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#"
+								   onclick="openModal(0)" style="min-width: 180px"><i
 										class="fa fa-plus"></i> Entrada</a>
-								<input name="name" id="nameFilter" class="form-control my-1" placeholder="Nome">
+								<select id="clientFilter" name="client" class="form-control form-select height-35 my-1">
+									<option value="">Selecionar Cliente</option>
+									<?php foreach ($clients as $client): ?>
+										<option
+											value="<?= $client->getClient()->getId() ?>"><?= $client->getName() ?></option>
+									<?php endforeach; ?>
+								</select>
 							</div>
-							<div class="col-md-4 text-end d-sm-flex">
+							<div class="col-md-2 my-1">
+								<select id="destinyFilter" name="destiny" class="form-control form-select">
+									<option value="">Selecionar Destino</option>
+									<option value="1">Conta 1</option>
+									<option value="2">Conta 2</option>
+								</select>
+							</div>
+							<div class="col-md-2 my-1">
+								<input id="codeFilter" name="code" class="form-control" type="text"
+								       placeholder="Código">
+							</div>
+							<div class="col-md-2 text-end d-sm-flex">
 								<button class="btn btn-danger my-1" type="reset" onclick="resetTable()">Limpar
 								</button>
 								<button class="btn btn-primary my-1 m-l-10" type="submit">Buscar</button>
@@ -52,7 +70,10 @@
 									<th class="text-center">Destino</th>
 									<th class="text-center">Valor Real</th>
 									<th class="text-center">Valor Peso</th>
-									<th class="text-center">Ações</th>
+									<th class="text-center">Código</th>
+									<?php if ($user->getType() == 1): ?>
+										<th class="text-center">Ações</th>
+									<?php endif; ?>
 								</tr>
 								</thead>
 								<tbody id="tableBody"></tbody>
@@ -70,7 +91,7 @@
 						<nav aria-label="...">
 							<ul class="pagination justify-content-end pagination-primary"
 							    id="pagination" style="top: auto">
-							
+
 							</ul>
 						</nav>
 					</div>
@@ -106,7 +127,8 @@
 							<select id="client" name="client" class="form-control form-select">
 								<option value="">Selecionar</option>
 								<?php foreach ($clients as $client): ?>
-								<option value="<?= $client->getClient()->getId() ?>"><?= $client->getName() ?></option>
+									<option
+										value="<?= $client->getClient()->getId() ?>"><?= $client->getName() ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
@@ -123,8 +145,8 @@
 							<label for="destiny">Conta Destino *</label>
 							<select id="destiny" name="destiny" class="form-control form-select">
 								<option value="">Selecionar</option>
-									<option value="1">Conta 1</option>
-									<option value="2">Conta 2</option>
+								<option value="1">Conta 1</option>
+								<option value="2">Conta 2</option>
 							</select>
 						</div>
 						<div class="col-md-6">

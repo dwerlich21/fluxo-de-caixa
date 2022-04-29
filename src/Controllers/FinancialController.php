@@ -62,6 +62,8 @@ class FinancialController extends Controller
 				->setPrice(str_replace(',', '.', $data['price']))
 				->setCode($data['code'])
 				->setDescription($data['description'])
+				->setSender($data['sender'])
+				->setStatus(1)
 				->setDate(\DateTime::createFromFormat('d/m/Y', $data['date']));
 			$this->em->getRepository(Financial::class)->save($financial);
 			
@@ -98,19 +100,18 @@ class FinancialController extends Controller
 		$user = $this->getLogged(true);
 		if ($user->getType() != 1) exit;
 		$filter['id'] = $request->getAttribute('route')->getArgument('id');
-		$filter['name'] = $request->getQueryParam('name');
-		$filter['email'] = $request->getQueryParam('email');
-		$filter['type'] = $request->getQueryParam('type');
-		$filter['active'] = $request->getQueryParam('active');
+		$filter['client'] = $request->getQueryParam('client');
+		$filter['destiny'] = $request->getQueryParam('destiny');
+		$filter['code'] = $request->getQueryParam('code');
 		$index = $request->getQueryParam('index');
 		$limit = $request->getQueryParam('limit');
-		$users = $this->em->getRepository(Client::class)->list($filter, $limit, $index * $limit);
-		$total = $this->em->getRepository(Client::class)->listTotal($filter)['total'];
-		$partial = ($index * $limit) + sizeof($users);
+		$financial = $this->em->getRepository(Financial::class)->list($filter, $type, $limit, $index * $limit);
+		$total = $this->em->getRepository(Financial::class)->listTotal($filter, $type)['total'];
+		$partial = ($index * $limit) + sizeof($financial);
 		$partial = $partial <= $total ? $partial : $total;
 		return $response->withJson([
 			'status' => 'ok',
-			'message' => $users,
+			'message' => $financial,
 			'total' => (int)$total,
 			'partial' => $partial,
 		], 201)

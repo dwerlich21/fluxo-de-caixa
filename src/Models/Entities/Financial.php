@@ -66,6 +66,11 @@ class Financial
 	 * @Column(type="string", nullable=true)
 	 */
 	private ?string $sender = null;
+	
+	/**
+	 * @Column(type="boolean")
+	 */
+	private bool $status;
 
 	public function getId(): ?int
 	{
@@ -168,6 +173,28 @@ class Financial
 	public function setDate(\DateTime $date): Financial
 	{
 		$this->date = $date;
+		return $this;
+	}
+
+	public function getSender(): ?string
+	{
+		return $this->sender;
+	}
+
+	public function setSender(?string $sender): Financial
+	{
+		$this->sender = $sender;
+		return $this;
+	}
+
+	public function isStatus(): bool
+	{
+		return $this->status;
+	}
+
+	public function setStatus(bool $status): Financial
+	{
+		$this->status = $status;
 		return $this;
 	}
 }

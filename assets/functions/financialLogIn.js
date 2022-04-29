@@ -1,6 +1,6 @@
 const formAdd = document.getElementById('addForm');
 const formFilter = document.getElementById('filter');
-var name = partial = index = 0;
+var client = destiny = code = partial = index = 0;
 var total = 1;
 var limit = 25;
 
@@ -28,7 +28,7 @@ function openModal(id) {
     $('#modal').modal('show');
     if (id > 0) {
         startLoading();
-        fetch(`${baseurl}clientes/${id}`, {
+        fetch(`${baseurl}entradas/listar/${id}`, {
             method: "GET",
             credentials: 'same-origin',
             headers: {
@@ -38,13 +38,14 @@ function openModal(id) {
         }).then(response => {
             response.json().then(json => {
                 json = json.message[0];
-                document.getElementById('name').value = json.name;
-                document.getElementById('phone').value = json.phone;
-                document.getElementById('country').value = json.country;
-                document.getElementById('city').value = json.city;
-                document.getElementById('city').value = json.city;
-                document.getElementById('email').value = json.email;
-                document.getElementById('active').value = json.active;
+                document.getElementById('client').value = json.client;
+                document.getElementById('code').value = json.code;
+                document.getElementById('date').value = json.dateList;
+                document.getElementById('destiny').value = json.destiny;
+                document.getElementById('price').value = json.price.replace('.', ',');
+                document.getElementById('sender').value = json.sender;
+                document.getElementById('valuePeso').value = maskMoneySetPeso(json.valuePeso);
+                document.getElementById('valueReal').value = maskMoneySet(json.valueReal);
                 endLoading();
             });
         });
@@ -170,14 +171,16 @@ formFilter.addEventListener('submit', e => {
     let formData = formDataToJson('filter');
     partial = index = 0;
     total = 1;
-    name = formData.name;
+    client = formData.client;
+    destiny = formData.destiny;
+    code = formData.code;
     $("#table tbody").empty();
     generateTable();
 });
 
 function resetTable() {
     total = 1;
-    partial = index = name = 0;
+    partial = index = client = destiny = code = 0;
     $("#table tbody").empty();
     generateTable();
 }
@@ -185,22 +188,33 @@ function resetTable() {
 function generateLines(client) {
 
     let actions = '';
-    actions += `<i class="fa fa-pencil m-r-10 text-info pointer" title="Editar" onclick="openModal(${client.id})"></i>`;
-    actions = `<td class="text-center">${actions} </td>`;
+    if (type == 1) {
+        actions += `<i class="fa fa-pencil m-r-10 text-info pointer" title="Editar" onclick="openModal(${client.id})"></i>`;
+        actions = `<td class="text-center">${actions} </td>`;
+    }
 
     return `<tr id="line${client.id}" class="middle">
                 <td>${client.name}</td>
-                <td class="text-center">${client.email}</td>
-                <td class="text-center">${client.phone}</td>
-                <td class="text-center">${client.country}</td>
-                <td class="text-center">${buttonStatus(client.active, client.id, 'clientes')}</td>
+                <td class="text-center">${client.sender}</td>
+                <td class="text-center">${setDestiny(client.destiny)}</td>
+                <td class="text-center">${maskMoneySet(client.valueReal)}</td>
+                <td class="text-center">${maskMoneySetPeso(client.valuePeso)}</td>
+                <td class="text-center">${client.code}</td>
                 ${actions}
             </tr>`;
 }
 
+function setDestiny(destiny) {
+    if (destiny == 1) {
+        return 'Conta 1';
+    } else if (destiny == 2) {
+        return 'Conta 2';
+    }
+}
+
 function generateTable() {
     $('.loaderTable').css('opacity', 1);
-    fetch(`${baseurl}clientes/listar/?index=${index}&name=${name}&limit=${limit}`, {
+    fetch(`${baseurl}entradas/listar/?index=${index}&client=${client}&destiny=${destiny}&code=${code}&limit=${limit}`, {
         method: "GET",
         credentials: 'same-origin',
         headers: {
@@ -218,7 +232,11 @@ function generateTable() {
                 let options = json.message.map(generateLines);
                 $("#table tbody").append(options);
             } else {
-                $("#table tbody").append(`<tr><td colspan="8" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                if (type == 1) {
+                    $("#table tbody").append(`<tr><td colspan="7" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                } else {
+                    $("#table tbody").append(`<tr><td colspan="6" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                }
             }
             if (json.message.length > 0) generatePagination(total, 'tableBody', 'pagination', index, limit);
         });

@@ -184,6 +184,7 @@
 		<script>
 
 			var baseurl = '<?= BASEURL ?>';
+			var type = <?= $user->getType() ?>;
 
 			function redirect(type) {
 				if (type == 1) {
