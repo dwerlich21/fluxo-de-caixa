@@ -2,63 +2,69 @@
 
 namespace App\Controllers;
 
-use App\Helpers\Validator;
+use App\Helpers\Utils;
 use App\Models\Entities\Client;
+use App\Models\Entities\Financial;
 use App\Models\Entities\User;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class ClientController extends Controller
+class FinancialController extends Controller
 {
-	public function index(Request $request, Response $response)
+	public function index(Request $request, Response $response, bool $type)
 	{
 		$user = $this->getLogged();
 		if ($user->getType() > 2) $this->redirect('extratos');
-		$users = $this->em->getRepository(User::class)->findBy([], ['name' => 'asc']);
-		return $this->renderer->render($response, 'default.phtml', ['page' => 'clients/financialLogIn.phtml', 'menuActive' => ['clients'],
-			'user' => $user, 'users' => $users, 'title' => 'Clientes']);
+		if ($type == 1) {
+			$title = 'Entradas';
+			$menu = 'log-in';
+			$page = 'financialLogIn.phtml';
+		} else {
+			$title = 'Saídas';
+			$menu = 'log-out';
+			$page = 'financialLogOut.phtml';
+		}
+		$clients = $this->em->getRepository(User::class)->findBy(['type' => 3, 'active' => 1], ['name' => 'asc']);
+		return $this->renderer->render($response, 'default.phtml', ['page' => "financial/{$page}", 'menuActive' => [$menu],
+			'user' => $user, 'clients' => $clients, 'title' => $title, 'type' => $type]);
 	}
 	
-	public function save(Request $request, Response $response)
+	public function save(Request $request, Response $response, bool $type)
 	{
 		try {
 			$user = $this->getLogged();
 			if ($user->getType() > 2) exit;
 			$this->em->beginTransaction();
+			if ($type == 1) {
+				$single = 'Entrada';
+			} else {
+				$single = 'Saída';
+			}
 			$data = (array)$request->getParams();
-			$data['clientId'] ?? 0;
-			$message = 'Cliente registrado com sucesso!';
-			if ($data['clientId'] == 0) {
-				$verify = $this->em->getRepository(User::class)->findOneBy(['email' => $data['email']]);
-				if ($verify) throw new Exception('E-mail já registrado!');
-			}
+			$data['financialId'] ?? 0;
+			$message = "{$single} registrada com sucesso!";
 			
-			// Salvar Cliente
-			$client = new Client();
-			if ($data['clientId'] > 0) {
-				$client = $this->em->getRepository(Client::class)->find($data['clientId']);
-				$message = 'Cliente editado com sucesso!';
-			}
-			$client->setCity($data['city'])
-				->setPhone($data['phone'])
-				->setCountry($data['country']);
-			$this->em->getRepository(Client::class)->save($client);
+			$verify = $this->em->getRepository(Financial::class)->findBy(['code' => $data['code']]);
+			if ($verify) throw new Exception('Código já cadastrado');
 			
-			// Salvar dados de Acesso do Cliente
-			$user = new User();
-			if ($data['clientId'] > 0) {
-				$user = $this->em->getRepository(User::class)->findOneBy(['client' => $client]);
+			$financial = new Financial();
+			if ($data['financialId'] > 0) {
+				$financial = $this->em->getRepository(Financial::class)->find($data['financialId']);
+				$message = "{$single} editada com sucesso!";
 			}
-			$user->setName($data['name'])
-				->setEmail($data['email'])
-				->setClient($client)
-				->setType(3);
-			if ($data['clientId'] == 0) {
-				$user->setActive($data['active'])
-					->setPassword(password_hash($data['password'], PASSWORD_ARGON2I));
-			}
-			$this->em->getRepository(User::class)->save($user);
+
+			$financial->setType($type)
+				->setClient($this->em->getReference(Client::class, $data['client']))
+				->setDestiny($data['destiny'])
+				->setValuePeso(Utils::setFloat($data['valuePeso']))
+				->setValueReal(Utils::setFloat($data['valueReal']))
+				->setPrice(str_replace(',', '.', $data['price']))
+				->setCode($data['code'])
+				->setDescription($data['description'])
+				->setDate(\DateTime::createFromFormat('d/m/Y', $data['date']));
+			$this->em->getRepository(Financial::class)->save($financial);
+			
 			$this->em->commit();
 			return $response->withJson([
 				'status' => 'ok',
@@ -87,7 +93,7 @@ class ClientController extends Controller
 			->withHeader('Content-type', 'application/json');
 	}
 	
-	public function list(Request $request, Response $response)
+	public function list(Request $request, Response $response, bool $type)
 	{
 		$user = $this->getLogged(true);
 		if ($user->getType() != 1) exit;

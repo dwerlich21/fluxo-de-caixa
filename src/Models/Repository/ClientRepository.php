@@ -36,16 +36,7 @@ class ClientRepository extends EntityRepository
 		if ($filter['name']) {
 			$name = $filter['name'];
 			$params[':name'] = "%$name%";
-			$where .= " AND client.name LIKE :name";
-		}
-		if ($filter['email']) {
-			$email = $filter['email'];
-			$params[':email'] = "%$email%";
-			$where .= " AND client.email LIKE :email";
-		}
-		if ($filter['type']) {
-			$params[':type'] = $filter['type'];
-			$where .= " AND client.type = :type";
+			$where .= " AND users.name LIKE :name";
 		}
 		return $where;
 	}

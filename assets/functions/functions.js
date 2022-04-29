@@ -460,3 +460,15 @@ function changeStatus(id, status, route) {
         });
     });
 }
+
+function maskMoneySet(value) {
+    var money = parseFloat(value);
+    money = money.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+    return money;
+}
+
+function maskMoneySetPeso(value) {
+    var money = parseFloat(value);
+    money = money.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'});
+    return money;
+}

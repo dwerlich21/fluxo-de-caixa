@@ -4,15 +4,30 @@ var name = partial = index = 0;
 var total = 1;
 var limit = 25;
 
+function setValuePeso() {
+    let real = $('#valueReal').val();
+    let price = $('#price').val();
+
+    real = real.replace('R$', '');
+    real = real.replace('.', '');
+    real = parseFloat(real.replace(',', '.'));
+
+    price = parseFloat(price.replace(',', '.'));
+
+    let value = real * price;
+
+    $('#valuePeso').val(maskMoneySetPeso(value));
+    $('#code').focus();
+}
+
 function openModal(id) {
     formAdd.reset();
     $('.form-control').removeClass('is-invalid  is-valid');
-    document.getElementById('clientId').value = id;
-    $('#passwordDiv').show();
+    document.getElementById('financialId').value = id;
+    // $('#valueReal').val(maskMoneySet('250.5'));
     $('#modal').modal('show');
     if (id > 0) {
         startLoading();
-        $('#passwordDiv').hide();
         fetch(`${baseurl}clientes/${id}`, {
             method: "GET",
             credentials: 'same-origin',
@@ -44,47 +59,65 @@ function validateForm() {
     let greens = [];
     const formData = formDataToJson('addForm');
 
-    if (formData.name.trim() == '') {
-        errors.push('<b> Nome</b>');
-        ids.push('name');
+    if (formData.client.trim() == '') {
+        errors.push('<b> Cliente</b>');
+        ids.push('client');
     } else {
-        greens.push('name')
+        greens.push('client')
     }
-    if (formData.phone.trim() == '') {
-        errors.push('<b> Telefone</b>');
-        ids.push('phone');
+    if (formData.sender.trim() == '') {
+        errors.push('<b> Remetente</b>');
+        ids.push('sender');
     } else {
-        greens.push('phone')
+        greens.push('sender')
     }
-    if (formData.country.trim() == '') {
-        errors.push('<b> País</b>');
-        ids.push('country');
+    if (formData.destiny.trim() == '') {
+        errors.push('<b> Conta Destino</b>');
+        ids.push('destiny');
     } else {
-        greens.push('country')
+        greens.push('destiny')
     }
-    if (formData.city.trim() == '') {
-        errors.push('<b> Cidade</b>');
-        ids.push('city');
+    if (formData.valueReal.trim() == '') {
+        errors.push('<b> Valor em Real</b>');
+        ids.push('valueReal');
     } else {
-        greens.push('city')
+        greens.push('valueReal')
     }
-    if (formData.email.trim() == '') {
-        errors.push('<b> E-mail</b>');
-        ids.push('email');
+    if (formData.price.trim() == '') {
+        errors.push('<b> Cotação</b>');
+        ids.push('price');
     } else {
-        greens.push('email')
+        greens.push('price')
     }
-    if (formData.clientId == 0) {
-        if (formData.password.trim() == '') {
-            errors.push('<b> Senha</b>');
-            ids.push('password');
-        } else {
-            greens.push('password')
-        }
+    if (formData.valuePeso.trim() == '') {
+        errors.push('<b> Valor em Peso</b>');
+        ids.push('valuePeso');
+    } else {
+        greens.push('valuePeso')
     }
-
-    if (formData.password.trim() != '' && formData.password.length < 8) {
-        showNotify('danger', 'A senha deve ter no mínimo 8 caracteres');
+    if (formData.code.trim() == '') {
+        errors.push('<b> Código</b>');
+        ids.push('code');
+    } else {
+        greens.push('code')
+    }
+    if (formData.date.trim() == '') {
+        errors.push('<b> Date</b>');
+        ids.push('date');
+    } else {
+        greens.push('date')
+    }
+    var today = new Date();
+    var matches = /^(\d{2})[-\/](\d{2})[-\/](\d{4})$/.exec(formData.date);
+    var date = new Date(`${matches[2]}/${matches[1]}/${matches[3]}`);
+    if (formData.date.trim() != '' && date > today) {
+        showNotify('danger', 'A Data deve ser anterior a data atual!', 2000);
+        $('#date').addClass('is-invalid');
+        return false;
+    }
+    if (formData.date.trim() != '' && !isValidDate(formData.date)) {
+        showNotify('danger', 'Data Inválida!', 1500);
+        $('#date').addClass('is-invalid');
         return false;
     }
 
@@ -103,7 +136,7 @@ formAdd.addEventListener('submit', e => {
         return;
     }
     let formData = formDataToJson('addForm');
-    fetch(`${baseurl}clientes`, {
+    fetch(`${baseurl}entradas`, {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
@@ -120,8 +153,12 @@ formAdd.addEventListener('submit', e => {
                 setTimeout(function () {
                     $('#modal').modal('hide');
                     resetTable();
-                }, 2000);
+                }, 1500);
             } else {
+                if (json.message == 'Código já cadastrado') {
+                    $('#code').removeClass('is-invalid');
+                    $('#code').addClass('is-invalid');
+                }
                 showNotify('danger', json.message, 1500);
             }
         });
@@ -190,4 +227,11 @@ function generateTable() {
 
 $(document).ready(function () {
     generateTable();
+    $("#valueReal").maskMoney({
+        prefix: 'R$ ',
+        allowNegative: true,
+        thousands: '.',
+        decimal: ',',
+        affixesStay: false
+    });
 });

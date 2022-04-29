@@ -99,22 +99,6 @@ class Utils
 		return $randomString;
 	}
 	
-	public static function saveDoc(string $doc): string
-	{
-		$doc = explode("uploads/", $doc);
-		return count($doc) > 1 ? BASEURL . "uploads/{$doc[1]}" : '';
-	}
-	
-	public static function dateInFull($date)
-	{
-		$dates = explode('/', $date);
-		setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-		date_default_timezone_set('America/Sao_Paulo');
-		$extenso = strftime('%d de %B de %Y', mktime(0, 0, 0, $dates[1], $dates[0], $dates[2]));
-		
-		return $extenso;
-	}
-	
 	public static function randColor()
 	{
 		return '#' . str_pad(dechex(mt_Rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
@@ -125,9 +109,11 @@ class Utils
 		return '#' . sprintf('%06X', mt_rand(0, 0xFFFFFFF));
 	}
 	
-	public static function onlyNumbers(string $str)
+	public static function setFloat(string $str)
 	{
-		return preg_replace("/[^0-9]/", "", $str);
+		$string = preg_replace('/[^0-9]/', '', $str);
+
+		return floatval(intval($string) / 100);
 	}
 	
 	public static function mask($val, $mask)

@@ -9,7 +9,7 @@
 	<meta name="keywords"
 	      content="admin template, viho admin template, dashboard template, flat admin template, responsive admin template, web app">
 	<meta name="author" content="pixelstrap">
-	<link rel="icon" href="<?= BASEURL ?>assets/images/favicon.png" type="image/x-icon">
+	<link rel="icon" href="<?= BASEURL ?>assets/img/icon.jpeg" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= BASEURL ?>assets/images/favicon.png" type="image/x-icon">
 	<title>FlashMoney - <?= $title ?></title>
 	<!-- Google font-->
@@ -58,7 +58,7 @@
 			<div class="main-header-left">
 				<div class="logo-wrapper">
 					<a href="<?= BASEURL ?>empresa">
-						<img height="40px" src="<?= BASEURL ?>assets/img/logo2.png" alt="LogoFlashMoney">
+						<img height="40px" src="<?= BASEURL ?>assets/img/logo.jpeg" alt="LogoFlashMoney">
 					</a>
 				</div>
 				<div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"
@@ -139,21 +139,21 @@
 							</li>
 							
 							<li>
-								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+								<a class="nav-link link-nav <?= in_array('log-in', $menuActive) ? 'active-dash' : '' ?>"
 								   href="<?= BASEURL ?>entradas">
 									<i data-feather="log-in"></i><span>Entradas</span>
 								</a>
 							</li>
 							
 							<li>
-								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+								<a class="nav-link link-nav <?= in_array('log-out', $menuActive) ? 'active-dash' : '' ?>"
 								   href="<?= BASEURL ?>saidas">
 									<i data-feather="log-out"></i><span>Saídas</span>
 								</a>
 							</li>
 							
 							<li>
-								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+								<a class="nav-link link-nav <?= in_array('extract', $menuActive) ? 'active-dash' : '' ?>"
 								   href="<?= BASEURL ?>extratos">
 									<i data-feather="list"></i><span>Extratos</span>
 								</a>

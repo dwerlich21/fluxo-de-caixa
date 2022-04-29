@@ -22,7 +22,7 @@
 			if (Session::get('sgsst')) {
 				$this->redirect();
 			}
-			return $this->renderer->render($response, 'login/index.phtml');
+			return $this->renderer->render($response, 'login/financialLogIn.phtml');
 		}
 		
 		public function autentication(Request $request, Response $response)
