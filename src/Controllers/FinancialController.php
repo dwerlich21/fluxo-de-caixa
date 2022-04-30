@@ -30,6 +30,14 @@ class FinancialController extends Controller
 			'user' => $user, 'clients' => $clients, 'title' => $title, 'type' => $type]);
 	}
 	
+	public function extract(Request $request, Response $response)
+	{
+		$user = $this->getLogged();
+		$clients = $this->em->getRepository(User::class)->findBy(['type' => 3, 'active' => 1], ['name' => 'asc']);
+		return $this->renderer->render($response, 'default.phtml', ['page' => "financial/extract.phtml", 'menuActive' => ['extract'],
+			'user' => $user, 'clients' => $clients, 'title' => 'Extratos']);
+	}
+	
 	public function save(Request $request, Response $response, bool $type)
 	{
 		try {
@@ -45,21 +53,23 @@ class FinancialController extends Controller
 			$data['financialId'] ?? 0;
 			$message = "{$single} registrada com sucesso!";
 			
-			$verify = $this->em->getRepository(Financial::class)->findBy(['code' => $data['code']]);
-			if ($verify) throw new Exception('Código já cadastrado');
+			if ($type === true) {
+				$verify = $this->em->getRepository(Financial::class)->findBy(['code' => $data['code']]);
+				if ($verify) throw new Exception('Código já cadastrado');
+			}
 			
 			$financial = new Financial();
 			if ($data['financialId'] > 0) {
 				$financial = $this->em->getRepository(Financial::class)->find($data['financialId']);
 				$message = "{$single} editada com sucesso!";
 			}
-
+			
 			$financial->setType($type)
 				->setClient($this->em->getReference(Client::class, $data['client']))
 				->setDestiny($data['destiny'])
 				->setValuePeso(Utils::setFloat($data['valuePeso']))
 				->setValueReal(Utils::setFloat($data['valueReal']))
-				->setPrice(str_replace(',', '.', $data['price']))
+				->setPrice($data['price'] ? str_replace(',', '.', $data['price']) : null)
 				->setCode($data['code'])
 				->setDescription($data['description'])
 				->setSender($data['sender'])
@@ -79,18 +89,22 @@ class FinancialController extends Controller
 		}
 	}
 	
-	public function changeStatus(Request $request, Response $response)
+	public function delete(Request $request, Response $response, bool $type)
 	{
 		$user = $this->getLogged(true);
 		if ($user->getType() != 1) exit;
-		$id = $request->getQueryParam('id');
-		$status = $request->getQueryParam('status');
-		$u = $this->em->getRepository(User::class)->findOneBy(['client' => $id]);
-		$u->setActive($status);
-		$this->em->getRepository(User::class)->save($u);
+		$id = $request->getAttribute('route')->getArgument('id');
+		if ($type === true) {
+			$message = 'Entrada excluída com sucesso!';
+		} else {
+			$message = 'Saída excluída com sucesso!';
+		}
+		$financial = $this->em->getRepository(Financial::class)->find($id);
+		$financial->setStatus(0);
+		$this->em->getRepository(Financial::class)->save($financial);
 		return $response->withJson([
 			'status' => 'ok',
-			'message' => "Status do cliente alterado para {$u->activeStr()}",
+			'message' => $message,
 		], 201)
 			->withHeader('Content-type', 'application/json');
 	}

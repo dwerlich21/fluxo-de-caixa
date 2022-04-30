@@ -16,7 +16,7 @@ class ClientController extends Controller
 		$user = $this->getLogged();
 		if ($user->getType() > 2) $this->redirect('extratos');
 		$users = $this->em->getRepository(User::class)->findBy([], ['name' => 'asc']);
-		return $this->renderer->render($response, 'default.phtml', ['page' => 'clients/financialLogIn.phtml', 'menuActive' => ['clients'],
+		return $this->renderer->render($response, 'default.phtml', ['page' => 'clients/index.phtml', 'menuActive' => ['clients'],
 			'user' => $user, 'users' => $users, 'title' => 'Clientes']);
 	}
 	

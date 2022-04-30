@@ -189,7 +189,8 @@ function generateLines(client) {
 
     let actions = '';
     if (type == 1) {
-        actions += `<i class="fa fa-pencil m-r-10 text-info pointer" title="Editar" onclick="openModal(${client.id})"></i>`;
+        actions += `<i class="fa fa-pencil m-r-10 text-info pointer" title="Editar" onclick="openModal(${client.id})"></i>
+                    <i class="fa fa-trash m-r-10 text-danger pointer" title="Excluir" onclick="deleteFinancial(${client.id})"></i>`;
         actions = `<td class="text-center">${actions} </td>`;
     }
 
@@ -209,6 +210,33 @@ function setDestiny(destiny) {
         return 'Conta 1';
     } else if (destiny == 2) {
         return 'Conta 2';
+    }
+}
+
+function deleteFinancial(id) {
+    var result = confirm('Você tem certeza que deseja fazer isso?\nSua ação será permanente e você não poderá recuperar os dados excluídos!');
+    if (result == true) {
+        fetch(`${baseurl}entradas/excluir/${id}`, {
+            method: "DELETE",
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            response.json().then(json => {
+                if (response.status === 201) {
+                    showNotify('success', json.message, 1500);
+                    setTimeout(function () {
+                        $('#line' + id).hide(200);
+                    }, 1000);
+                } else {
+                    showNotify('danger', json.message, 1500);
+                }
+            });
+        });
+    } else {
+        return false;
     }
 }
 

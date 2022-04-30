@@ -5,12 +5,27 @@
 				<div class="card-header pb-0">
 					<form id="filter" autocomplete="off" class="form-group">
 						<div class="row">
-							<div class="col-md-8 d-sm-flex">
-								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#" onclick="openModal(0)" style="min-width: 180px"><i
+							<div class="col-md-5 d-sm-flex">
+								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#"
+								   onclick="openModal(0)" style="min-width: 180px"><i
 										class="fa fa-plus"></i> Saída</a>
-								<input name="name" id="nameFilter" class="form-control my-1" placeholder="Nome">
+								<select id="clientFilter" name="client" class="form-control form-select height-35 my-1">
+									<option value="">Selecionar Cliente</option>
+									<?php foreach ($clients as $client): ?>
+										<option
+											value="<?= $client->getClient()->getId() ?>"><?= $client->getName() ?></option>
+									<?php endforeach; ?>
+								</select>
 							</div>
-							<div class="col-md-4 text-end d-sm-flex">
+							<div class="col-md-2 my-1">
+								<input id="startFilter" name="start" class="form-control" type="text"
+								       placeholder="Dê dd/mm/AAAA" data-mask="99/99/9999">
+							</div>
+							<div class="col-md-2 my-1">
+								<input id="endFilter" name="end" class="form-control" type="text"
+								       placeholder="Até dd/mm/AAAA" data-mask="99/99/9999">
+							</div>
+							<div class="col-md-2 text-end d-sm-flex">
 								<button class="btn btn-danger my-1" type="reset" onclick="resetTable()">Limpar
 								</button>
 								<button class="btn btn-primary my-1 m-l-10" type="submit">Buscar</button>
@@ -47,12 +62,13 @@
 							<table class="table table-hover table-sm" id="table">
 								<thead>
 								<tr>
-									<th>Nome</th>
-									<th class="text-center">E-mail</th>
-									<th class="text-center">Telefone</th>
-									<th class="text-center">País</th>
-									<th class="text-center">Status</th>
-									<th class="text-center">Ações</th>
+									<th>Cliente</th>
+									<th class="text-center">Data</th>
+									<th class="text-center">Valor Peso</th>
+									<th class="text-center">Descrição</th>
+									<?php if ($user->getType() == 1): ?>
+										<th class="text-center">Ações</th>
+									<?php endif; ?>
 								</tr>
 								</thead>
 								<tbody id="tableBody"></tbody>
@@ -70,7 +86,7 @@
 						<nav aria-label="...">
 							<ul class="pagination justify-content-end pagination-primary"
 							    id="pagination" style="top: auto">
-							
+
 							</ul>
 						</nav>
 					</div>
@@ -97,111 +113,41 @@
 						</div>
 					</div>
 				</div>
-				<?php if ($type == 1): ?>
-					
-					<!--				Modal de Entradas -->
-					<div class="modal-body form-group">
-						<input type="hidden" name="financialId" id="financialId">
-						<input type="hidden" name="type" id="type" value="<?= $type ?>">
-						<div class="row">
-							<div class="col-md-7">
-								<label for="name">Nome *</label>
-								<input id="name" name="name" class="form-control" type="text" placeholder="Nome">
-							</div>
-							<div class="col-md-5">
-								<label for="phone">Telefone *</label>
-								<input id="phone" name="phone" class="form-control" type="text" placeholder="Telefone">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<label for="city">Cidade *</label>
-								<input id="city" name="city" class="form-control" type="text"
-								       placeholder="Cidade">
-							</div>
-							<div class="col-md-6">
-								<label for="country">País *</label>
-								<input id="country" name="country" class="form-control" type="text"
-								       placeholder="País">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<label for="email">E-mail *</label>
-								<input id="email" name="email" class="form-control" type="email"
-								       placeholder="E-mail">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-8" id="passwordDiv">
-								<label for="password">Senha *</label>
-								<input id="password" name="password" class="form-control" type="password"
-								       placeholder="Senha">
-								<span class="f-12 text-muted m-l-5">Mínimo 8 caracteres</span>
-							</div>
-							<div class="col-md-4">
-								<label for="active">Status *</label>
-								<select id="active" name="active" class="form-control form-select">
-									<option value="1">Ativo</option>
-									<option value="0">Inativo</option>
-								</select>
-							</div>
+				<div class="modal-body form-group">
+					<input type="hidden" name="financialId" id="financialId">
+					<input type="hidden" name="type" id="type" value="<?= $type ?>">
+					<div class="row">
+						<div class="col">
+							<label for="client">Cliente *</label>
+							<select id="client" name="client" class="form-control form-select">
+								<option value="">Selecionar</option>
+								<?php foreach ($clients as $client): ?>
+									<option
+										value="<?= $client->getClient()->getId() ?>"><?= $client->getName() ?></option>
+								<?php endforeach; ?>
+							</select>
 						</div>
 					</div>
-				
-				<?php else: ?>
-					
-					<!--				Modal de Saídas-->
-					<div class="modal-body form-group">
-						<input type="hidden" name="financialId" id="financialId">
-						<input type="hidden" name="type" id="type" value="<?= $type ?>">
-						<div class="row">
-							<div class="col-md-7">
-								<label for="name">Nome *</label>
-								<input id="name" name="name" class="form-control" type="text" placeholder="Nome">
-							</div>
-							<div class="col-md-5">
-								<label for="phone">Telefone *</label>
-								<input id="phone" name="phone" class="form-control" type="text" placeholder="Telefone">
-							</div>
+					<div class="row">
+						<div class="col-md-6">
+							<label for="valuePeso">Valor em Peso *</label>
+							<input id="valuePeso" name="valuePeso" class="form-control" type="text"
+							       placeholder="Valor em Peso">
 						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<label for="city">Cidade *</label>
-								<input id="city" name="city" class="form-control" type="text"
-								       placeholder="Cidade">
-							</div>
-							<div class="col-md-6">
-								<label for="country">País *</label>
-								<input id="country" name="country" class="form-control" type="text"
-								       placeholder="País">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<label for="email">E-mail *</label>
-								<input id="email" name="email" class="form-control" type="email"
-								       placeholder="E-mail">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-8" id="passwordDiv">
-								<label for="password">Senha *</label>
-								<input id="password" name="password" class="form-control" type="password"
-								       placeholder="Senha">
-								<span class="f-12 text-muted m-l-5">Mínimo 8 caracteres</span>
-							</div>
-							<div class="col-md-4">
-								<label for="active">Status *</label>
-								<select id="active" name="active" class="form-control form-select">
-									<option value="1">Ativo</option>
-									<option value="0">Inativo</option>
-								</select>
-							</div>
+						<div class="col-md-6">
+							<label for="date">Data *</label>
+							<input id="date" name="date" class="form-control" type="text"
+							       placeholder="dd/mm/AAAA" data-mask="99/99/9999">
 						</div>
 					</div>
-				
-				<?php endif; ?>
+					<div class="row">
+						<div class="col">
+							<label for="description">Descrição</label>
+							<textarea id="description" name="description" class="form-control"
+							          placeholder="Descrição da Saída" rows="3"></textarea>
+						</div>
+					</div>
+				</div>
 				<div class="modal-footer">
 					<div class="col text-end">
 						<button type="submit" class="btn btn-primary">Salvar Saída</button>
@@ -212,4 +158,5 @@
 	</div>
 </div>
 
+<script src="<?= BASEURL ?>assets/js/jquery.maskMoney.min.js"></script>
 <script src="<?= BASEURL ?>assets/functions/financialLogOut.js?v=<?= time() ?>"></script>

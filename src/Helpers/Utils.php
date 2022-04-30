@@ -109,11 +109,13 @@ class Utils
 		return '#' . sprintf('%06X', mt_rand(0, 0xFFFFFFF));
 	}
 	
-	public static function setFloat(string $str)
+	public static function setFloat($str)
 	{
 		$string = preg_replace('/[^0-9]/', '', $str);
+		$float = floatval(intval($string) / 100);
+		if ($float == '') $float = null;
 
-		return floatval(intval($string) / 100);
+		return $float;
 	}
 	
 	public static function mask($val, $mask)

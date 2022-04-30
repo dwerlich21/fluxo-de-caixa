@@ -13,7 +13,7 @@ class UserController extends Controller
 		$user = $this->getLogged();
 		if ($user->getType() != 1) $this->redirect('');
 		$users = $this->em->getRepository(User::class)->findBy([], ['name' => 'asc']);
-		return $this->renderer->render($response, 'default.phtml', ['page' => 'users/financialLogIn.phtml', 'menuActive' => ['users'],
+		return $this->renderer->render($response, 'default.phtml', ['page' => 'users/index.phtml', 'menuActive' => ['users'],
 			'user' => $user, 'users' => $users, 'title' => 'Usuários']);
 	}
 	
