@@ -225,9 +225,9 @@ function generateTable() {
                 $("#table tbody").append(options);
             } else {
                 if (type == 1) {
-                    $("#table tbody").append(`<tr><td colspan="7" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                    $("#table tbody").append(`<tr><td colspan="5" class="text-center">Nenhum resultado encontrado</td></tr>`);
                 } else {
-                    $("#table tbody").append(`<tr><td colspan="6" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                    $("#table tbody").append(`<tr><td colspan="4" class="text-center">Nenhum resultado encontrado</td></tr>`);
                 }
             }
             if (json.message.length > 0) generatePagination(total, 'tableBody', 'pagination', index, limit);

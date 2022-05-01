@@ -54,8 +54,8 @@ class FinancialController extends Controller
 			$message = "{$single} registrada com sucesso!";
 			
 			if ($type === true) {
-				$verify = $this->em->getRepository(Financial::class)->findBy(['code' => $data['code']]);
-				if ($verify) throw new Exception('Código já cadastrado');
+				$verify = $this->em->getRepository(Financial::class)->findOneBy(['code' => $data['code']]);
+				if ($verify && $verify->getId() != $data['financialId']) throw new Exception('Código já cadastrado');
 			}
 			
 			$financial = new Financial();
@@ -109,18 +109,19 @@ class FinancialController extends Controller
 			->withHeader('Content-type', 'application/json');
 	}
 	
-	public function list(Request $request, Response $response, bool $type)
+	public function list(Request $request, Response $response, int $type)
 	{
 		$user = $this->getLogged(true);
-		if ($user->getType() != 1) exit;
+		if ($user->getType() > 2) exit;
 		$filter['id'] = $request->getAttribute('route')->getArgument('id');
 		$filter['client'] = $request->getQueryParam('client');
 		$filter['destiny'] = $request->getQueryParam('destiny');
 		$filter['code'] = $request->getQueryParam('code');
+		$filter['type'] = $type;
 		$index = $request->getQueryParam('index');
 		$limit = $request->getQueryParam('limit');
-		$financial = $this->em->getRepository(Financial::class)->list($filter, $type, $limit, $index * $limit);
-		$total = $this->em->getRepository(Financial::class)->listTotal($filter, $type)['total'];
+		$financial = $this->em->getRepository(Financial::class)->list($filter, $limit, $index * $limit);
+		$total = $this->em->getRepository(Financial::class)->listTotal($filter)['total'];
 		$partial = ($index * $limit) + sizeof($financial);
 		$partial = $partial <= $total ? $partial : $total;
 		return $response->withJson([
@@ -134,13 +135,44 @@ class FinancialController extends Controller
 	
 	public function data(Request $request, Response $response)
 	{
-		$this->getLogged(true);
+		$user = $this->getLogged(true);
+		if ($user->getType() != 1) exit;
 		$filter['id'] = $request->getAttribute('route')->getArgument('id');
-		$client = $this->em->getRepository(Client::class)->data($filter);
+		$client = $this->em->getRepository(Financial::class)->list($filter);
 		return $response->withJson([
 			'status' => 'ok',
 			'message' => $client,
 		], 200)
+			->withHeader('Content-type', 'application/json');
+	}
+	
+	public function listExtract(Request $request, Response $response)
+	{
+		$user = $this->getLogged(true);
+		$filter['id'] = $request->getAttribute('route')->getArgument('id');
+		$filter['client'] = $request->getQueryParam('client');
+		if ($user->getType() == 3) $filter['client'] = $user->getClient()->getId();
+		$filter['destiny'] = $request->getQueryParam('destiny');
+		$filter['start'] = $request->getQueryParam('start');
+		$filter['end'] = $request->getQueryParam('end');
+		$index = $request->getQueryParam('index');
+		$limit = $request->getQueryParam('limit');
+		$financial = $this->em->getRepository(Financial::class)->list($filter, $limit, $index * $limit);
+		$total = $this->em->getRepository(Financial::class)->listTotal($filter)['total'];
+		$balance['logIn'] = $this->em->getRepository(Financial::class)->balanceLogIn($filter)['logIn'];
+		$balance['logOut'] = $this->em->getRepository(Financial::class)->balanceLogOut($filter)['logOut'];
+		if ($balance['logIn'] == null) $balance['logIn'] = 0;
+		if ($balance['logOut'] == null) $balance['logOut'] = 0;
+		$balance = floatval($balance['logIn']) - floatval($balance['logOut']);
+		$partial = ($index * $limit) + sizeof($financial);
+		$partial = $partial <= $total ? $partial : $total;
+		return $response->withJson([
+			'status' => 'ok',
+			'message' => $financial,
+			'total' => (int)$total,
+			'partial' => $partial,
+			'balance' => $balance
+		], 201)
 			->withHeader('Content-type', 'application/json');
 	}
 }

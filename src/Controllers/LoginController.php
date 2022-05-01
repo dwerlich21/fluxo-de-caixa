@@ -22,7 +22,7 @@
 			if (Session::get('sgsst')) {
 				$this->redirect();
 			}
-			return $this->renderer->render($response, 'login/financialLogIn.phtml');
+			return $this->renderer->render($response, 'login/index.phtml');
 		}
 		
 		public function autentication(Request $request, Response $response)
@@ -49,7 +49,7 @@
 				header("Location: {$this->baseUrl}login");
 				exit;
 			}
-			header("Location: {$this->baseUrl}empresa/selecionar");
+			header("Location: {$this->baseUrl}");
 			exit;
 		}
 		

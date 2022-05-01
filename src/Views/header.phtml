@@ -131,34 +131,36 @@
 									</a>
 								</li>
 							<?php endif; ?>
-							<li>
-								<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>clientes">
-									<i data-feather="dollar-sign"></i><span>Clientes</span>
-								</a>
-							</li>
-							
-							<li>
-								<a class="nav-link link-nav <?= in_array('log-in', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>entradas">
-									<i data-feather="log-in"></i><span>Entradas</span>
-								</a>
-							</li>
-							
-							<li>
-								<a class="nav-link link-nav <?= in_array('log-out', $menuActive) ? 'active-dash' : '' ?>"
-								   href="<?= BASEURL ?>saidas">
-									<i data-feather="log-out"></i><span>Saídas</span>
-								</a>
-							</li>
-							
+							<?php if ($user->getType() < 3): ?>
+								<li>
+									<a class="nav-link link-nav <?= in_array('clients', $menuActive) ? 'active-dash' : '' ?>"
+									   href="<?= BASEURL ?>clientes">
+										<i data-feather="dollar-sign"></i><span>Clientes</span>
+									</a>
+								</li>
+
+								<li>
+									<a class="nav-link link-nav <?= in_array('log-in', $menuActive) ? 'active-dash' : '' ?>"
+									   href="<?= BASEURL ?>entradas">
+										<i data-feather="log-in"></i><span>Entradas</span>
+									</a>
+								</li>
+
+								<li>
+									<a class="nav-link link-nav <?= in_array('log-out', $menuActive) ? 'active-dash' : '' ?>"
+									   href="<?= BASEURL ?>saidas">
+										<i data-feather="log-out"></i><span>Saídas</span>
+									</a>
+								</li>
+							<?php endif; ?>
+
 							<li>
 								<a class="nav-link link-nav <?= in_array('extract', $menuActive) ? 'active-dash' : '' ?>"
 								   href="<?= BASEURL ?>extratos">
 									<i data-feather="list"></i><span>Extratos</span>
 								</a>
 							</li>
-							
+
 						</ul>
 					</div>
 					<div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>

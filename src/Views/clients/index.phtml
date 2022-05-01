@@ -6,7 +6,8 @@
 					<form id="filter" autocomplete="off" class="form-group">
 						<div class="row">
 							<div class="col-md-8 d-sm-flex">
-								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#" onclick="openModal(0)" style="min-width: 180px"><i
+								<a class="btn btn-primary text-white m-r-30 height-35 my-1" href="#"
+								   onclick="openModal(0)" style="min-width: 180px"><i
 										class="fa fa-plus"></i> Cliente</a>
 								<input name="name" id="nameFilter" class="form-control my-1" placeholder="Nome">
 							</div>
@@ -51,8 +52,10 @@
 									<th class="text-center">E-mail</th>
 									<th class="text-center">Telefone</th>
 									<th class="text-center">País</th>
-									<th class="text-center">Status</th>
-									<th class="text-center">Ações</th>
+									<?php if ($user->getType() == 1): ?>
+										<th class="text-center">Status</th>
+										<th class="text-center">Ações</th>
+									<?php endif; ?>
 								</tr>
 								</thead>
 								<tbody id="tableBody"></tbody>

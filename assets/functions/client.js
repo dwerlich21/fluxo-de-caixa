@@ -148,15 +148,20 @@ function resetTable() {
 function generateLines(client) {
 
     let actions = '';
+    let status = '';
+    if (type == 1) {
+     status = `<td class="text-center">${buttonStatus(client.active, client.id, 'clientes')}</td>`
+
     actions += `<i class="fa fa-pencil m-r-10 text-info pointer" title="Editar" onclick="openModal(${client.id})"></i>`;
     actions = `<td class="text-center">${actions} </td>`;
+    }
 
     return `<tr id="line${client.id}" class="middle">
                 <td>${client.name}</td>
                 <td class="text-center">${client.email}</td>
                 <td class="text-center">${client.phone}</td>
                 <td class="text-center">${client.country}</td>
-                <td class="text-center">${buttonStatus(client.active, client.id, 'clientes')}</td>
+                ${status}
                 ${actions}
             </tr>`;
 }

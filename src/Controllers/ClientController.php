@@ -74,7 +74,7 @@ class ClientController extends Controller
 	public function changeStatus(Request $request, Response $response)
 	{
 		$user = $this->getLogged(true);
-		if ($user->getType() != 1) exit;
+		if ($user->getType() > 2) exit;
 		$id = $request->getQueryParam('id');
 		$status = $request->getQueryParam('status');
 		$u = $this->em->getRepository(User::class)->findOneBy(['client' => $id]);
@@ -90,7 +90,7 @@ class ClientController extends Controller
 	public function list(Request $request, Response $response)
 	{
 		$user = $this->getLogged(true);
-		if ($user->getType() != 1) exit;
+		if ($user->getType() > 2) exit;
 		$filter['id'] = $request->getAttribute('route')->getArgument('id');
 		$filter['name'] = $request->getQueryParam('name');
 		$filter['email'] = $request->getQueryParam('email');
@@ -113,7 +113,8 @@ class ClientController extends Controller
 	
 	public function data(Request $request, Response $response)
 	{
-		$this->getLogged(true);
+		$user = $this->getLogged(true);
+		if ($user->getType() != 1) exit;
 		$filter['id'] = $request->getAttribute('route')->getArgument('id');
 		$client = $this->em->getRepository(Client::class)->data($filter);
 		return $response->withJson([
