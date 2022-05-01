@@ -1,5 +1,5 @@
 const formFilter = document.getElementById('filter');
-var client = destiny = start = end = partial = index = balance = 0;
+var account = start = end = partial = index = balance = 0;
 var total = 1;
 var limit = 25;
 
@@ -8,8 +8,8 @@ formFilter.addEventListener('submit', e => {
     let formData = formDataToJson('filter');
     partial = index = 0;
     total = 1;
-    client = formData.client;
-    destiny = formData.destiny;
+    if (type < 3)client = formData.client;
+    account = formData.account;
     start = formData.start;
     end = formData.end;
     $("#table tbody").empty();
@@ -18,7 +18,7 @@ formFilter.addEventListener('submit', e => {
 
 function resetTable() {
     total = 1;
-    partial = index = client = destiny = start = end = 0;
+    partial = index = client = account = start = end = 0;
     $("#table tbody").empty();
     generateTable();
 }
@@ -28,23 +28,30 @@ function generateLines(client) {
     let name = '';
     if (type < 3) name = `<td>${client.name}</td>`;
     let description = '';
-    if (client.description != null) description = client.description;
-    let code = '';
-    if (client.code != null) code = client.code;
+    let account = '';
+    let valueReal = '';
+    let price = '';
+
     let classe = '';
     let pre = '';
     if (client.type == false) {
         classe = 'text-danger';
+        description = client.description;
         pre = '-';
     } else {
         classe = 'text-success';
+        account = client.destiny;
+        valueReal = maskMoneySet(client.valueReal);
+        price = maskMoneySetPeso(client.price);
     }
 
     let html = `<tr id="line${client.id}" class="middle">
                     ${name}
                     <td class="text-center">${client.dateList}</td>
-                    <td class="text-center">${code}</td>
+                    <td class="text-center">${account}</td>
                     <td class="text-center">${description}</td>
+                    <td class="text-center">${price}</td>
+                    <td class="text-center">${valueReal}</td>
                     <td class="text-center ${classe}"><b>${pre}${maskMoneySetPeso(client.valuePeso)}</b></td>
                     <td class="text-center">${maskMoneySetPeso(balance)}</td>
                 </tr>`;
@@ -61,7 +68,7 @@ function generateLines(client) {
 function generateTable() {
     if (total > partial) {
         $('.loaderTable').css('opacity', 1);
-        fetch(`${baseurl}extratos/listar/?index=${index}&client=${client}&destiny=${destiny}&start=${start}&end=${end}&limit=${limit}`, {
+        fetch(`${baseurl}extratos/listar/?index=${index}&client=${client}&account=${account}&start=${start}&end=${end}&limit=${limit}`, {
             method: "GET",
             credentials: 'same-origin',
             headers: {
@@ -72,6 +79,16 @@ function generateTable() {
             $('.loaderTable').css('opacity', 0);
             response.json().then(json => {
                 if (index == 0) balance = json.balance
+                $('#totalLogIn').text(maskMoneySetPeso(json.logIn));
+                $('#totalLogOut').text(maskMoneySetPeso(json.logOut));
+                if (parseFloat(balance) > 0) {
+                    $('#totalBalance').removeClass('text-danger');
+                    $('#totalBalance').addClass('text-success');
+                } else {
+                    $('#totalBalance').removeClass('text-success');
+                    $('#totalBalance').addClass('text-danger');
+                }
+                $('#totalBalance').text(maskMoneySetPeso(balance));
                 total = json.total;
                 partial = json.partial;
                 if (json.message.length > 0) {

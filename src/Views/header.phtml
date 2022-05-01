@@ -130,6 +130,16 @@
 										<i data-feather="users"></i><span>Usuários</span>
 									</a>
 								</li>
+
+								<li>
+									<a class="nav-link link-nav <?= in_array('accounts', $menuActive) ? 'active-dash' : '' ?>"
+									   href="<?= BASEURL ?>contas">
+										<span class="f-22">
+											<i class="fa fa-bank pt-3 pb-3"></i>
+										</span>
+										<span>Contas</span>
+									</a>
+								</li>
 							<?php endif; ?>
 							<?php if ($user->getType() < 3): ?>
 								<li>
@@ -187,6 +197,7 @@
 
 			var baseurl = '<?= BASEURL ?>';
 			var type = <?= $user->getType() ?>;
+			var client = <?= $user->getType() ?>;
 
 			function redirect(type) {
 				if (type == 1) {

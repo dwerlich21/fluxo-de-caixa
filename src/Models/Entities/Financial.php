@@ -28,9 +28,11 @@ class Financial
 	private Client $client;
 	
 	/**
-	 * @Column(type="integer", nullable=true)
+	 * @ManyToOne(targetEntity="Account")
+	 * @JoinColumn(name="account", referencedColumnName="id", nullable=true)
+	 * @var Account
 	 */
-	private ?int $destiny = null;
+	private Account $account;
 	
 	/**
 	 * @Column(type="float", nullable=true)
@@ -99,14 +101,14 @@ class Financial
 		return $this;
 	}
 
-	public function getDestiny(): ?int
+	public function getAccount(): Account
 	{
-		return $this->destiny;
+		return $this->account;
 	}
 
-	public function setDestiny(?int $destiny): Financial
+	public function setAccount(Account $account): Financial
 	{
-		$this->destiny = $destiny;
+		$this->account = $account;
 		return $this;
 	}
 

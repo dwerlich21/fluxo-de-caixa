@@ -18,10 +18,12 @@
 								</select>
 							</div>
 							<div class="col-md-2 my-1">
-								<select id="destinyFilter" name="destiny" class="form-control form-select">
+								<select id="accountFilter" name="account" class="form-control form-select">
 									<option value="">Selecionar Destino</option>
-									<option value="1">Conta 1</option>
-									<option value="2">Conta 2</option>
+									<?php foreach ($accounts as $item): ?>
+										<option
+											value="<?= $item->getId() ?>"><?= $item->getName() ?></option>
+									<?php endforeach; ?>
 								</select>
 							</div>
 							<div class="col-md-2 my-1">
@@ -68,7 +70,7 @@
 									<th>Cliente</th>
 									<th class="text-center">Remetente</th>
 									<th class="text-center">Destino</th>
-									<th class="text-center">Valor Real</th>
+									<th class="text-center">Valor Reais</th>
 									<th class="text-center">Valor Peso</th>
 									<th class="text-center">Código</th>
 									<?php if ($user->getType() == 1): ?>
@@ -142,11 +144,13 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-							<label for="destiny">Conta Destino *</label>
-							<select id="destiny" name="destiny" class="form-control form-select">
+							<label for="account">Conta Destino *</label>
+							<select id="account" name="account" class="form-control form-select">
 								<option value="">Selecionar</option>
-								<option value="1">Conta 1</option>
-								<option value="2">Conta 2</option>
+								<?php foreach ($activeAccounts as $item): ?>
+									<option
+										value="<?= $item->getId() ?>"><?= $item->getName() ?></option>
+								<?php endforeach; ?>
 							</select>
 						</div>
 						<div class="col-md-6">

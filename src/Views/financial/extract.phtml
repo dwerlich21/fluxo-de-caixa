@@ -18,10 +18,11 @@
 								</div>
 							<?php endif; ?>
 							<div class="col-md-2 my-1">
-								<select id="destinyFilter" name="destiny" class="form-control form-select">
+								<select id="accountFilter" name="account" class="form-control form-select">
 									<option value="">Selecionar Destino</option>
-									<option value="1">Conta 1</option>
-									<option value="2">Conta 2</option>
+									<?php foreach ($accounts as $item): ?>
+										<option value="<?= $item->getId() ?>"><?= $item->getName() ?></option>
+									<?php endforeach; ?>
 								</select>
 							</div>
 							<div class="col-md-2 my-1">
@@ -42,6 +43,25 @@
 					<hr>
 				</div>
 				<div class="card-body">
+					<div class="row table-responsive-md">
+						<div class="col">
+							<table class="table table-hover table-sm" id="tableTotal">
+								<thead>
+								<tr>
+									<th class="text-center">
+										Total de Depositos: <b><span class="text-success" id="totalLogIn"></span></b>
+									</th>
+									<th class="text-center">
+										Total de Retiradas: <b><span class="text-danger" id="totalLogOut"></span></b>
+									</th>
+									<th class="text-center">
+										SALDO: <b><span id="totalBalance"></span></b>
+									</th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
 					<div class="row table-responsive-xxl">
 						<div class="col">
 							<table class="table table-hover table-sm" id="table">
@@ -51,8 +71,10 @@
 										<th>Cliente</th>
 									<?php endif; ?>
 									<th class="text-center">Data</th>
-									<th class="text-center">Código</th>
+									<th class="text-center">Destino</th>
 									<th class="text-center">Descrição</th>
+									<th class="text-center">Cotação</th>
+									<th class="text-center">Valor Reais</th>
 									<th class="text-center">Valor Peso</th>
 									<th class="text-center">Saldo</th>
 								</tr>
@@ -75,3 +97,6 @@
 </div>
 
 <script src="<?= BASEURL ?>assets/functions/extract.js?v=<?= time() ?>"></script>
+<script>
+	var client = <?= $user->getType() == 3 ? $user->getClient()->getId() : 0 ?>;
+</script>

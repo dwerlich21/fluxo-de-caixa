@@ -36,9 +36,9 @@ class FinancialRepository extends EntityRepository
 			$params[':client'] = $filter['client'];
 			$where .= " AND financial.client = :client";
 		}
-		if ($filter['destiny']) {
-			$params[':destiny'] = $filter['destiny'];
-			$where .= " AND financial.destiny = :destiny";
+		if ($filter['account']) {
+			$params[':account'] = $filter['account'];
+			$where .= " AND financial.account = :account";
 		}
 		if ($filter['type'] > -1) {
 			$params[':type'] = $filter['type'];
@@ -68,8 +68,9 @@ class FinancialRepository extends EntityRepository
 		$limitSql = $this->generateLimit($limit, $offset);
 		$where = $this->generateWhere($filter, $params);
 		$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
-		$sql = "SELECT financial.*, DATE_FORMAT(financial.date, '%d/%m/%Y') as dateList, users.name AS name
+		$sql = "SELECT financial.*, DATE_FORMAT(financial.date, '%d/%m/%Y') as dateList, users.name AS name, account.name AS destiny
                 FROM financial
+                LEFT JOIN account ON account.id = financial.account
 				JOIN client ON client.id = financial.client
 				JOIN users ON users.client = client.id
                 WHERE financial.status = 1 {$where}
@@ -87,6 +88,7 @@ class FinancialRepository extends EntityRepository
 		$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 		$sql = "SELECT COUNT(financial.id) AS total
                 FROM financial
+                LEFT JOIN account ON account.id = financial.account
 				JOIN client ON client.id = financial.client
 				JOIN users ON users.client = client.id
                 WHERE financial.status = 1  {$where}
@@ -103,6 +105,7 @@ class FinancialRepository extends EntityRepository
 		$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 		$sql = "SELECT  SUM(financial.valuePeso) AS logIn
                 FROM financial
+				LEFT JOIN account ON account.id = financial.account
 				JOIN client ON client.id = financial.client
 				JOIN users ON users.client = client.id
                 WHERE financial.status = 1 AND financial.type = 1  {$where}
@@ -119,6 +122,7 @@ class FinancialRepository extends EntityRepository
 		$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 		$sql = "SELECT SUM(financial.valuePeso) AS logOut
                 FROM financial
+                LEFT JOIN account ON account.id = financial.account
 				JOIN client ON client.id = financial.client
 				JOIN users ON users.client = client.id
                 WHERE financial.status = 1 AND financial.type = 0  {$where}

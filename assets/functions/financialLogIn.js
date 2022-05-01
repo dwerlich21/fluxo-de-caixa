@@ -1,6 +1,6 @@
 const formAdd = document.getElementById('addForm');
 const formFilter = document.getElementById('filter');
-var client = destiny = code = partial = index = 0;
+var client = account = code = partial = index = 0;
 var total = 1;
 var limit = 25;
 
@@ -12,6 +12,8 @@ function setValuePeso() {
     real = real.replace('.', '');
     real = parseFloat(real.replace(',', '.'));
 
+    price = price.replace('$', '');
+    price = price.replace('.', '');
     price = parseFloat(price.replace(',', '.'));
 
     let value = real * price;
@@ -41,7 +43,7 @@ function openModal(id) {
                 document.getElementById('client').value = json.client;
                 document.getElementById('code').value = json.code;
                 document.getElementById('date').value = json.dateList;
-                document.getElementById('destiny').value = json.destiny;
+                document.getElementById('account').value = json.account;
                 document.getElementById('price').value = json.price.replace('.', ',');
                 document.getElementById('sender').value = json.sender;
                 document.getElementById('valuePeso').value = maskMoneySetPeso(json.valuePeso);
@@ -72,11 +74,11 @@ function validateForm() {
     } else {
         greens.push('sender')
     }
-    if (formData.destiny.trim() == '') {
+    if (formData.account.trim() == '') {
         errors.push('<b> Conta Destino</b>');
-        ids.push('destiny');
+        ids.push('account');
     } else {
-        greens.push('destiny')
+        greens.push('account')
     }
     if (formData.valueReal.trim() == '') {
         errors.push('<b> Valor em Real</b>');
@@ -172,7 +174,7 @@ formFilter.addEventListener('submit', e => {
     partial = index = 0;
     total = 1;
     client = formData.client;
-    destiny = formData.destiny;
+    account = formData.account;
     code = formData.code;
     $("#table tbody").empty();
     generateTable();
@@ -180,7 +182,7 @@ formFilter.addEventListener('submit', e => {
 
 function resetTable() {
     total = 1;
-    partial = index = client = destiny = code = 0;
+    partial = index = client = account = code = 0;
     $("#table tbody").empty();
     generateTable();
 }
@@ -197,20 +199,12 @@ function generateLines(client) {
     return `<tr id="line${client.id}" class="middle">
                 <td>${client.name}</td>
                 <td class="text-center">${client.sender}</td>
-                <td class="text-center">${setDestiny(client.destiny)}</td>
+                <td class="text-center">${client.destiny}</td>
                 <td class="text-center">${maskMoneySet(client.valueReal)}</td>
                 <td class="text-center">${maskMoneySetPeso(client.valuePeso)}</td>
                 <td class="text-center">${client.code}</td>
                 ${actions}
             </tr>`;
-}
-
-function setDestiny(destiny) {
-    if (destiny == 1) {
-        return 'Conta 1';
-    } else if (destiny == 2) {
-        return 'Conta 2';
-    }
 }
 
 function deleteFinancial(id) {
@@ -242,7 +236,7 @@ function deleteFinancial(id) {
 
 function generateTable() {
     $('.loaderTable').css('opacity', 1);
-    fetch(`${baseurl}entradas/listar/?index=${index}&client=${client}&destiny=${destiny}&code=${code}&limit=${limit}`, {
+    fetch(`${baseurl}entradas/listar/?index=${index}&client=${client}&account=${account}&code=${code}&limit=${limit}`, {
         method: "GET",
         credentials: 'same-origin',
         headers: {
@@ -275,6 +269,13 @@ $(document).ready(function () {
     generateTable();
     $("#valueReal").maskMoney({
         prefix: 'R$ ',
+        allowNegative: true,
+        thousands: '.',
+        decimal: ',',
+        affixesStay: false
+    });
+    $("#price").maskMoney({
+        prefix: '$ ',
         allowNegative: true,
         thousands: '.',
         decimal: ',',

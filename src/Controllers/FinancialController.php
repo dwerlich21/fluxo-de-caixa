@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Helpers\Utils;
+use App\Models\Entities\Account;
 use App\Models\Entities\Client;
 use App\Models\Entities\Financial;
 use App\Models\Entities\User;
@@ -25,17 +26,21 @@ class FinancialController extends Controller
 			$menu = 'log-out';
 			$page = 'financialLogOut.phtml';
 		}
+		$accounts = $this->em->getRepository(Account::class)->findBy([], ['name' => 'asc']);
+		$activeAccounts = $this->em->getRepository(Account::class)->findBy(['active' => 1], ['name' => 'asc']);
 		$clients = $this->em->getRepository(User::class)->findBy(['type' => 3, 'active' => 1], ['name' => 'asc']);
 		return $this->renderer->render($response, 'default.phtml', ['page' => "financial/{$page}", 'menuActive' => [$menu],
-			'user' => $user, 'clients' => $clients, 'title' => $title, 'type' => $type]);
+			'user' => $user, 'clients' => $clients, 'title' => $title, 'type' => $type, 'accounts' => $accounts,
+			'activeAccounts' => $activeAccounts]);
 	}
 	
 	public function extract(Request $request, Response $response)
 	{
 		$user = $this->getLogged();
 		$clients = $this->em->getRepository(User::class)->findBy(['type' => 3, 'active' => 1], ['name' => 'asc']);
+		$accounts = $this->em->getRepository(Account::class)->findBy([], ['name' => 'asc']);
 		return $this->renderer->render($response, 'default.phtml', ['page' => "financial/extract.phtml", 'menuActive' => ['extract'],
-			'user' => $user, 'clients' => $clients, 'title' => 'Extratos']);
+			'user' => $user, 'clients' => $clients, 'title' => 'Extratos', 'accounts' => $accounts]);
 	}
 	
 	public function save(Request $request, Response $response, bool $type)
@@ -53,9 +58,9 @@ class FinancialController extends Controller
 			$data['financialId'] ?? 0;
 			$message = "{$single} registrada com sucesso!";
 			
-			if ($type === true) {
+			if ($type === true && $data['financialId'] == 0) {
 				$verify = $this->em->getRepository(Financial::class)->findOneBy(['code' => $data['code']]);
-				if ($verify && $verify->getId() != $data['financialId']) throw new Exception('Código já cadastrado');
+				if ($verify) throw new Exception('Código já cadastrado');
 			}
 			
 			$financial = new Financial();
@@ -66,10 +71,10 @@ class FinancialController extends Controller
 			
 			$financial->setType($type)
 				->setClient($this->em->getReference(Client::class, $data['client']))
-				->setDestiny($data['destiny'])
+				->setAccount($this->em->getReference(Account::class, $data['account']))
 				->setValuePeso(Utils::setFloat($data['valuePeso']))
 				->setValueReal(Utils::setFloat($data['valueReal']))
-				->setPrice($data['price'] ? str_replace(',', '.', $data['price']) : null)
+				->setPrice(Utils::setFloat($data['price']))
 				->setCode($data['code'])
 				->setDescription($data['description'])
 				->setSender($data['sender'])
@@ -115,7 +120,7 @@ class FinancialController extends Controller
 		if ($user->getType() > 2) exit;
 		$filter['id'] = $request->getAttribute('route')->getArgument('id');
 		$filter['client'] = $request->getQueryParam('client');
-		$filter['destiny'] = $request->getQueryParam('destiny');
+		$filter['account'] = $request->getQueryParam('account');
 		$filter['code'] = $request->getQueryParam('code');
 		$filter['type'] = $type;
 		$index = $request->getQueryParam('index');
@@ -152,7 +157,7 @@ class FinancialController extends Controller
 		$filter['id'] = $request->getAttribute('route')->getArgument('id');
 		$filter['client'] = $request->getQueryParam('client');
 		if ($user->getType() == 3) $filter['client'] = $user->getClient()->getId();
-		$filter['destiny'] = $request->getQueryParam('destiny');
+		$filter['account'] = $request->getQueryParam('account');
 		$filter['start'] = $request->getQueryParam('start');
 		$filter['end'] = $request->getQueryParam('end');
 		$index = $request->getQueryParam('index');
@@ -163,7 +168,7 @@ class FinancialController extends Controller
 		$balance['logOut'] = $this->em->getRepository(Financial::class)->balanceLogOut($filter)['logOut'];
 		if ($balance['logIn'] == null) $balance['logIn'] = 0;
 		if ($balance['logOut'] == null) $balance['logOut'] = 0;
-		$balance = floatval($balance['logIn']) - floatval($balance['logOut']);
+		$balanceTotal = floatval($balance['logIn']) - floatval($balance['logOut']);
 		$partial = ($index * $limit) + sizeof($financial);
 		$partial = $partial <= $total ? $partial : $total;
 		return $response->withJson([
@@ -171,7 +176,9 @@ class FinancialController extends Controller
 			'message' => $financial,
 			'total' => (int)$total,
 			'partial' => $partial,
-			'balance' => $balance
+			'balance' => $balanceTotal,
+			'logIn' => $balance['logIn'],
+			'logOut' => $balance['logOut']
 		], 201)
 			->withHeader('Content-type', 'application/json');
 	}
