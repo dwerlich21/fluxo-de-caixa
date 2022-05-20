@@ -51,13 +51,13 @@ class FinancialRepository extends EntityRepository
 		}
 		if ($filter['start']) {
 			$start = \DateTime::createFromFormat('d/m/Y', $filter['start']);
-			$params[':date'] = $start->format('Y-m-d 00:00');
-			$where .= " AND financial.date >= :date";
+			$params[':start'] = $start->format('Y-m-d 00:00');
+			$where .= " AND financial.date >= :start";
 		}
 		if ($filter['end']) {
 			$end = \DateTime::createFromFormat('d/m/Y', $filter['end']);
-			$params[':date'] = $end->format('Y-m-d 23:59');
-			$where .= " AND financial.date <= :date";
+			$params[':end'] = $end->format('Y-m-d 23:59');
+			$where .= " AND financial.date <= :end";
 		}
 		return $where;
 	}
@@ -68,7 +68,9 @@ class FinancialRepository extends EntityRepository
 		$limitSql = $this->generateLimit($limit, $offset);
 		$where = $this->generateWhere($filter, $params);
 		$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
-		$sql = "SELECT financial.*, DATE_FORMAT(financial.date, '%d/%m/%Y') as dateList, users.name AS name, account.name AS destiny
+		$sql = "SELECT financial.*, DATE_FORMAT(financial.date, '%d/%m/%Y') as dateList, users.name AS name,
+       			account.name AS destiny,
+					DATE_FORMAT(financial.created, '%d/%m/%Y %H:%i:%s') as created
                 FROM financial
                 LEFT JOIN account ON account.id = financial.account
 				JOIN client ON client.id = financial.client

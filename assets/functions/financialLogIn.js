@@ -8,18 +8,20 @@ function setValuePeso() {
     let real = $('#valueReal').val();
     let price = $('#price').val();
 
-    real = real.replace('R$', '');
-    real = real.replace('.', '');
-    real = parseFloat(real.replace(',', '.'));
+    if (real != '' && price != '') {
+        real = real.replace('R$', '');
+        real = real.replace('.', '');
+        real = parseFloat(real.replace(',', '.'));
 
-    price = price.replace('$', '');
-    price = price.replace('.', '');
-    price = parseFloat(price.replace(',', '.'));
+        price = price.replace('$', '');
+        price = price.replace('.', '');
+        price = parseFloat(price.replace(',', '.'));
 
-    let value = real * price;
+        let value = real * price;
 
-    $('#valuePeso').val(maskMoneySetPeso(value));
-    $('#code').focus();
+        $('#valuePeso').val(maskMoneySetPeso(value));
+        $('#code').focus();
+    }
 }
 
 function openModal(id) {
@@ -190,7 +192,10 @@ function resetTable() {
 function generateLines(client) {
 
     let actions = '';
+    let user = '';
     if (type == 1) {
+        user = `<td class="text-center">${client.user} </td>`;
+
         actions += `<i class="fa fa-pencil m-r-10 text-info pointer" title="Editar" onclick="openModal(${client.id})"></i>
                     <i class="fa fa-trash m-r-10 text-danger pointer" title="Excluir" onclick="deleteFinancial(${client.id})"></i>`;
         actions = `<td class="text-center">${actions} </td>`;
@@ -203,6 +208,7 @@ function generateLines(client) {
                 <td class="text-center">${maskMoneySet(client.valueReal)}</td>
                 <td class="text-center">${maskMoneySetPeso(client.valuePeso)}</td>
                 <td class="text-center">${client.code}</td>
+                ${user}
                 ${actions}
             </tr>`;
 }
@@ -249,6 +255,7 @@ function generateTable() {
             $('#total').text(json.total);
             $('#start').text(json.total > 0 ? index * limit + 1 : 0);
             $('#end').text(json.partial);
+            if (index == 0) $('#created').html(`<b>${json.created}</b>`)
             total = json.total;
             if (json.message.length > 0) {
                 let options = json.message.map(generateLines);
@@ -280,5 +287,9 @@ $(document).ready(function () {
         thousands: '.',
         decimal: ',',
         affixesStay: false
+    });
+    $("#code").change(function(){
+
+        $(this).val($(this).val().toUpperCase());
     });
 });

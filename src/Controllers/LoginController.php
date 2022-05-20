@@ -19,7 +19,7 @@
 		
 		public function login(Request $request, Response $response)
 		{
-			if (Session::get('sgsst')) {
+			if (Session::get('flashMoney')) {
 				$this->redirect();
 			}
 			return $this->renderer->render($response, 'login/index.phtml');
@@ -35,7 +35,7 @@
 				];
 				Validator::requireValidator($fields, $data);
 				$user = $this->em->getRepository(User::class)->login($data['email'], $data['password']);
-				Session::set('sgsst', $user->getId());
+				Session::set('flashMoney', $user->getId());
 				$this->newAccessLog($user);
 				$redirect = Session::get('redirect');
 				if ($redirect) {
@@ -68,7 +68,7 @@
 		
 		public function logout(Request $request, Response $response)
 		{
-			Session::forgot('sgsst');
+			Session::forgot('flashMoney');
 			header("Location: {$this->baseUrl}login");
 			exit;
 		}

@@ -49,7 +49,7 @@ class ClientRepository extends EntityRepository
 		$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 		$sql = "SELECT client.id, users.name, users.email, users.active, client.phone, client.country
                 FROM client
-				JOIN users ON users.client = client.id
+				LEFT JOIN users ON users.client = client.id
                 WHERE users.type = 3 {$where}
                 ORDER BY type ASC, name ASC {$limitSql}
                ";
@@ -65,7 +65,7 @@ class ClientRepository extends EntityRepository
 		$pdo = $this->getEntityManager()->getConnection()->getWrappedConnection();
 		$sql = "SELECT COUNT(client.id) AS total
                 FROM client
-				JOIN users ON users.client = client.id
+				LEFT JOIN users ON users.client = client.id
                 WHERE users.type = 3  {$where}
                ";
 		$sth = $pdo->prepare($sql);

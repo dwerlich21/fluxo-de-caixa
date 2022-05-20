@@ -30,9 +30,9 @@ class Financial
 	/**
 	 * @ManyToOne(targetEntity="Account")
 	 * @JoinColumn(name="account", referencedColumnName="id", nullable=true)
-	 * @var Account
+	 * @var Account|null
 	 */
-	private Account $account;
+	private ?Account $account = null;
 	
 	/**
 	 * @Column(type="float", nullable=true)
@@ -73,6 +73,21 @@ class Financial
 	 * @Column(type="boolean")
 	 */
 	private bool $status;
+	
+	/**
+	 * @Column(type="datetime", nullable=true)
+	 */
+	private ?\DateTime $created = null;
+	
+	public function __construct()
+	{
+		$this->created = new \DateTime();
+	}
+
+	public function getCreated(): \DateTime
+	{
+		return $this->created;
+	}
 
 	public function getId(): ?int
 	{
@@ -101,12 +116,12 @@ class Financial
 		return $this;
 	}
 
-	public function getAccount(): Account
+	public function getAccount(): ?Account
 	{
 		return $this->account;
 	}
 
-	public function setAccount(Account $account): Financial
+	public function setAccount(?Account $account): Financial
 	{
 		$this->account = $account;
 		return $this;

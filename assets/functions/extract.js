@@ -8,7 +8,7 @@ formFilter.addEventListener('submit', e => {
     let formData = formDataToJson('filter');
     partial = index = 0;
     total = 1;
-    if (type < 3)client = formData.client;
+    if (type < 3) client = formData.client;
     account = formData.account;
     start = formData.start;
     end = formData.end;
@@ -47,6 +47,7 @@ function generateLines(client) {
 
     let html = `<tr id="line${client.id}" class="middle">
                     ${name}
+                    <td class="text-center">${client.created}</td>
                     <td class="text-center">${client.dateList}</td>
                     <td class="text-center">${account}</td>
                     <td class="text-center">${description}</td>
@@ -79,8 +80,8 @@ function generateTable() {
             $('.loaderTable').css('opacity', 0);
             response.json().then(json => {
                 if (index == 0) balance = json.balance
-                $('#totalLogIn').text(maskMoneySetPeso(json.logIn));
-                $('#totalLogOut').text(maskMoneySetPeso(json.logOut));
+                $('#totalLogIn').html(`<b>${maskMoneySetPeso(json.logIn)}</b>`);
+                $('#totalLogOut').html(`<b>${maskMoneySetPeso(json.logOut)}</b>`);
                 if (parseFloat(balance) > 0) {
                     $('#totalBalance').removeClass('text-danger');
                     $('#totalBalance').addClass('text-success');
@@ -88,7 +89,8 @@ function generateTable() {
                     $('#totalBalance').removeClass('text-success');
                     $('#totalBalance').addClass('text-danger');
                 }
-                $('#totalBalance').text(maskMoneySetPeso(balance));
+                $('#totalBalance').html(`<b>${maskMoneySetPeso(json.balance)}</b>`);
+                if (index == 0) $('#created').html(`<b>${json.created}</b>`)
                 total = json.total;
                 partial = json.partial;
                 if (json.message.length > 0) {
@@ -96,9 +98,9 @@ function generateTable() {
                     $("#table tbody").append(options);
                 } else {
                     if (type == 1) {
-                        $("#table tbody").append(`<tr><td colspan="6" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                        $("#table tbody").append(`<tr><td colspan="8" class="text-center">Nenhum resultado encontrado</td></tr>`);
                     } else {
-                        $("#table tbody").append(`<tr><td colspan="5" class="text-center">Nenhum resultado encontrado</td></tr>`);
+                        $("#table tbody").append(`<tr><td colspan="7" class="text-center">Nenhum resultado encontrado</td></tr>`);
                     }
                 }
             });

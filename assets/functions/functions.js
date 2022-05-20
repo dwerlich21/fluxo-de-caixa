@@ -319,20 +319,20 @@ function generatePagination(total, body, id, indexPag, limitPag) {
     if ((total / limitPag) <= 5) {
         let disabled = '';
         if (indexPag == 0) disabled = 'disabled';
-        let buttons = `<li class="page-item ${disabled} pointer" onclick="addIndex('previous', ${div}, ${body})"><a class="page-link">Anterior</a></li>`;
+        let buttons = `<li class="page-item ${disabled} pointer" onclick="addIndex('previous', '${div}', '${body}')"><a class="page-link">Anterior</a></li>`;
         for (let i = 1; i <= div; i++) {
             let classe = '';
             if ((i - 1) == indexPag) classe = 'active';
-            buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, ${div}, ${body})"><a class="page-link">${i}</a></li>`;
+            buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, '${div}', '${body}')"><a class="page-link">${i}</a></li>`;
         }
         disabled = '';
         if (indexPag + 1 == div) disabled = 'disabled';
-        buttons += `<li class="page-item pointer ${disabled}" onclick="addIndex('next', ${div}, ${body})"><a class="page-link">Próximo</a></li>`;
+        buttons += `<li class="page-item pointer ${disabled}" onclick="addIndex('next', '${div}', '${body}')"><a class="page-link">Próximo</a></li>`;
         $('#' + id).append(buttons);
     } else if ((total / limitPag) > 5) {
         let disabled = '';
         if (indexPag == 0) disabled = 'disabled';
-        let buttons = `<li class="page-item ${disabled} pointer" onclick="addIndex('previous', ${div}, ${body})"><a class="page-link">Anterior</a></li>`;
+        let buttons = `<li class="page-item ${disabled} pointer" onclick="addIndex('previous', '${div}', '${body}')"><a class="page-link">Anterior</a></li>`;
 
         if (indexPag >= 3) buttons += `<li class="page-item"><a class="page-link">...</a></li>`;
 
@@ -340,26 +340,26 @@ function generatePagination(total, body, id, indexPag, limitPag) {
             for (let i = 1; i <= 5; i++) {
                 let classe = '';
                 if ((i - 1) == indexPag) classe = 'active';
-                buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, ${div}, ${body})"><a class="page-link">${i}</a></li>`;
+                buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, '${div}', '${body}')"><a class="page-link">${i}</a></li>`;
             }
         } else if (indexPag >= 3 && indexPag < (div - 2)) {
             for (let i = indexPag - 1; i <= indexPag + 3; i++) {
                 let classe = '';
                 if ((i - 1) == indexPag) classe = 'active';
-                buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, ${div}, ${body})"><a class="page-link">${i}</a></li>`;
+                buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, '${div}', '${body}')"><a class="page-link">${i}</a></li>`;
             }
         } else if (indexPag >= (div - 2)) {
             for (let i = div - 5; i <= Math.ceil(total / 1); i++) {
                 let classe = '';
                 if ((i - 1) == indexPag) classe = 'active';
-                buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, ${div}, ${body})"><a class="page-link">${i}</a></li>`;
+                buttons += `<li class="page-item ${classe} pointer" onclick="addIndex(${i - 1}, '${div}', '${body}')"><a class="page-link">${i}</a></li>`;
             }
         }
 
         if (indexPag < (Math.ceil(total / 1) - 3)) buttons += `<li class="page-item"><a class="page-link">...</a></li>`;
 
         if (indexPag + 1 == div) disabled = 'disabled';
-        buttons += `<li class="page-item pointer ${disabled}" onclick="addIndex('next', ${div}, ${body})"><a class="page-link">Próximo</a></li>`;
+        buttons += `<li class="page-item pointer ${disabled}" onclick="addIndex('next', ${div}, '${body}')"><a class="page-link">Próximo</a></li>`;
         $('#' + id).append(buttons);
     }
 }

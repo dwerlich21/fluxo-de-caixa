@@ -21,7 +21,7 @@ abstract class Controller
 	
 	protected function getLogged(bool $excepetion = false)
 	{
-		$user = Session::get('sgsst');
+		$user = Session::get('flashMoney');
 		if (!$user) {
 			if ($excepetion) throw new \Exception("Sessão expirada");
 			Session::set('redirect', $_SERVER["REQUEST_URI"]);

@@ -71,7 +71,7 @@ class FinancialController extends Controller
 			
 			$financial->setType($type)
 				->setClient($this->em->getReference(Client::class, $data['client']))
-				->setAccount($this->em->getReference(Account::class, $data['account']))
+				->setAccount($type == 1 ? $this->em->getReference(Account::class, $data['account']) : null)
 				->setValuePeso(Utils::setFloat($data['valuePeso']))
 				->setValueReal(Utils::setFloat($data['valueReal']))
 				->setPrice(Utils::setFloat($data['price']))
@@ -122,11 +122,14 @@ class FinancialController extends Controller
 		$filter['client'] = $request->getQueryParam('client');
 		$filter['account'] = $request->getQueryParam('account');
 		$filter['code'] = $request->getQueryParam('code');
+		$filter['start'] = $request->getQueryParam('start');
+		$filter['end'] = $request->getQueryParam('end');
 		$filter['type'] = $type;
 		$index = $request->getQueryParam('index');
 		$limit = $request->getQueryParam('limit');
 		$financial = $this->em->getRepository(Financial::class)->list($filter, $limit, $index * $limit);
 		$total = $this->em->getRepository(Financial::class)->listTotal($filter)['total'];
+		$created = $this->em->getRepository(Financial::class)->findOneBy(['type' => $type, 'status' => 1], ['id' => 'desc']);
 		$partial = ($index * $limit) + sizeof($financial);
 		$partial = $partial <= $total ? $partial : $total;
 		return $response->withJson([
@@ -134,6 +137,7 @@ class FinancialController extends Controller
 			'message' => $financial,
 			'total' => (int)$total,
 			'partial' => $partial,
+			'created' => $created->getCreated()->format('d/m/Y H:i:s')
 		], 201)
 			->withHeader('Content-type', 'application/json');
 	}
@@ -166,6 +170,10 @@ class FinancialController extends Controller
 		$total = $this->em->getRepository(Financial::class)->listTotal($filter)['total'];
 		$balance['logIn'] = $this->em->getRepository(Financial::class)->balanceLogIn($filter)['logIn'];
 		$balance['logOut'] = $this->em->getRepository(Financial::class)->balanceLogOut($filter)['logOut'];
+		$created = $this->em->getRepository(Financial::class)->findOneBy(['status' => 1], ['id' => 'desc']);
+		$register = 'Nenhum registro encontrado';
+		if ($created) $register =  $created->getCreated()->format('d/m/Y H:i:s');
+		if ($user->getType() > 2) $created = $this->em->getRepository(Financial::class)->findOneBy(['client' => $user->getClient(), 'status' => 1], ['id' => 'desc']);
 		if ($balance['logIn'] == null) $balance['logIn'] = 0;
 		if ($balance['logOut'] == null) $balance['logOut'] = 0;
 		$balanceTotal = floatval($balance['logIn']) - floatval($balance['logOut']);
@@ -178,7 +186,8 @@ class FinancialController extends Controller
 			'partial' => $partial,
 			'balance' => $balanceTotal,
 			'logIn' => $balance['logIn'],
-			'logOut' => $balance['logOut']
+			'logOut' => $balance['logOut'],
+			'created' => $register
 		], 201)
 			->withHeader('Content-type', 'application/json');
 	}

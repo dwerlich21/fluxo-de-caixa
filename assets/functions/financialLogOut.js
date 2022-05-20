@@ -1,6 +1,6 @@
 const formAdd = document.getElementById('addForm');
 const formFilter = document.getElementById('filter');
-var client = destiny = code = partial = index = 0;
+var client = start = end = partial = index = 0;
 var total = 1;
 var limit = 25;
 
@@ -146,8 +146,8 @@ formFilter.addEventListener('submit', e => {
     partial = index = 0;
     total = 1;
     client = formData.client;
-    destiny = formData.destiny;
-    code = formData.code;
+    start = formData.start;
+    end = formData.end;
     $("#table tbody").empty();
     generateTable();
 });
@@ -206,7 +206,7 @@ function deleteFinancial(id) {
 
 function generateTable() {
     $('.loaderTable').css('opacity', 1);
-    fetch(`${baseurl}saidas/listar/?index=${index}&client=${client}&destiny=${destiny}&code=${code}&limit=${limit}`, {
+    fetch(`${baseurl}saidas/listar/?index=${index}&client=${client}&start=${start}&end=${end}&limit=${limit}`, {
         method: "GET",
         credentials: 'same-origin',
         headers: {
@@ -219,6 +219,7 @@ function generateTable() {
             $('#total').text(json.total);
             $('#start').text(json.total > 0 ? index * limit + 1 : 0);
             $('#end').text(json.partial);
+            if (index == 0) $('#created').html(`<b>${json.created}</b>`)
             total = json.total;
             if (json.message.length > 0) {
                 let options = json.message.map(generateLines);

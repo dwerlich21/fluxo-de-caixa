@@ -9,7 +9,6 @@
 	$configs = [
 		'settings' => $config[$config['environment']]
 	];
-	
 	define("BASEURL", $configs['settings']['base_url']);
 	define("EMAIL_HOST", $configs['settings']['email_host']);
 	define("EMAIL_LOGIN", $configs['settings']['email_login']);
@@ -22,7 +21,6 @@
 	error_reporting($configs['settings']['errorReporting']);
 	
 	$container = new \Slim\Container($configs);
-	
 	$container['renderer'] = function () {
 		return new \Slim\Views\PhpRenderer('src/Views/');
 	};

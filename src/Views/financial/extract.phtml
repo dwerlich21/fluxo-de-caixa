@@ -43,6 +43,11 @@
 					<hr>
 				</div>
 				<div class="card-body">
+					<div class="row">
+						<div class="col py-3">
+							<span>Última atualização: </span><span id="created"></span>
+						</div>
+					</div>
 					<div class="row table-responsive-md">
 						<div class="col">
 							<table class="table table-hover table-sm" id="tableTotal">
@@ -70,7 +75,8 @@
 									<?php if ($user->getType() < 3): ?>
 										<th>Cliente</th>
 									<?php endif; ?>
-									<th class="text-center">Data</th>
+									<th class="text-center">Data Cadastro</th>
+									<th class="text-center">DataOperação</th>
 									<th class="text-center">Destino</th>
 									<th class="text-center">Descrição</th>
 									<th class="text-center">Cotação</th>
